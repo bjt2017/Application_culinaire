@@ -40,26 +40,32 @@ namespace SAE_D21
             ucBarre1.SetClick(this.Click_Recherche_Ingredient);
 
             Label Titre = new Label();
-            
-            Titre.Size = new System.Drawing.Size(500, 42);
-            Titre.Text = "QU'EST CE QU'ON MANGE CE SOIR ?";
-            
-            Titre.Font = new System.Drawing.Font("Bahnschrift", 18, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            Titre.TextAlign = ContentAlignment.MiddleCenter;
-            Titre.Location = new Point((this.Width) / 2 - (Titre.Size.Width)/2,30);
 
-            
+            Titre.Size = new System.Drawing.Size(500, 42);
+            Titre.Text = "Qu'es ce que on mange ce soir ?";
+
+            Titre.Font = new System.Drawing.Font("Bahnschrift", 22, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            Titre.TextAlign = ContentAlignment.MiddleCenter;
+            Titre.Location = new Point((this.Width) / 2 - (Titre.Size.Width) / 2, 25);
+
+
 
             Label Titre2 = new Label();
             Titre2.Size = new System.Drawing.Size(300, 42);
             Titre2.Text = "Nos recommandations";
-            
+
             Titre2.Font = new System.Drawing.Font("Bahnschrift", 16, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            Titre2.Location = new Point((this.Width) / 2 - (Titre2.Width)/2, 140);
+            Titre2.Location = new Point((this.Width) / 2 - (Titre2.Width) / 2, 140);
             Titre2.TextAlign = ContentAlignment.MiddleCenter;
             this.Controls.Add(Titre); this.Controls.Add(Titre2);
 
+            Panel panel = new Panel();
+            panel.BackColor = Color.FromArgb(255, 0, 0, 0);
+            panel.Width = 896;
+            panel.Height = 2;
+            panel.Location = new Point((this.Width) / 2 - (panel.Width) / 2, 160);
 
+            this.Controls.Add(panel);
             this.Controls.Add(barDeRecherche1);
             DataTable dtUnselected = dataset.Tables["Recettes"].Copy();
             for (int i = 0; i < 2; i++)
@@ -67,7 +73,7 @@ namespace SAE_D21
                 int decale_y = 0;
                 for (int j = 0; j < 3; j++)
                 {
-                    int decale_x = 0; 
+                    int decale_x = 0;
                     if (j > 0)
                     {
                         decale_x = j * 20;
@@ -84,16 +90,24 @@ namespace SAE_D21
                     try
                     {
                         dtUnselected.Rows.RemoveAt(row);
-                    }catch(Exception ex)
+                    }
+                    catch (Exception ex)
                     {
 
                     }
-                    ucCarte.Location = new Point(25 + j * ucCarte.Width + decale_x, 420 + i * ucCarte.Height + decale_y);
+                    ucCarte.Location = new Point(25 + j * ucCarte.Width + decale_x, 430 + i * ucCarte.Height + decale_y);
                     ucCarte.setClick(carteGrande_Click);
                     this.Controls.Add(ucCarte);
                 }
-                
+
             }
+            Panel panel2 = new Panel();
+            panel2.BackColor = Color.FromArgb(255, 128, 128, 128);
+            panel2.Width = 1000;
+            panel2.Height = 1;
+            panel2.Location = new Point((this.Width) / 2 - (panel2.Width) / 2 - 5, 405);
+            this.Controls.Add(panel2);
+
             for (int i = 0; i < 5; i++)
             {
                 int decale_x = 0;
@@ -115,7 +129,7 @@ namespace SAE_D21
                 }
                 this.Controls.Add(carteGrande);
             }
-            
+
         }
 
         // Connection string to database file
@@ -375,10 +389,16 @@ namespace SAE_D21
             while(this.Controls.Count>1){
                 foreach (Control c in this.Controls)
                 {
+                    if (c is ucRechercheIngredient)
+                    {
+                        ((ucRechercheIngredient)c).ControlRemoved();
+
+                    }
                     if (!(c is ucBarre))
                     {
                         this.Controls.Remove(c);
-                    }
+                    }  
+                    
                 }
             } 
         }
@@ -386,7 +406,7 @@ namespace SAE_D21
         public void Click_Recherche_Ingredient(object sender, EventArgs e)
         {
             this.Clear();
-            
+
             ucRechercheIngredient obj = new ucRechercheIngredient(dataset.Tables["Famille"], dataset.Tables["ingrédients"]);
             
             this.Controls.Add(obj);
