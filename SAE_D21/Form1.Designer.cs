@@ -45,7 +45,7 @@
             // 
             this.ucBarre1.BackColor = System.Drawing.SystemColors.ControlLight;
             this.ucBarre1.Location = new System.Drawing.Point(-1, 790);
-            this.ucBarre1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ucBarre1.Margin = new System.Windows.Forms.Padding(4);
             this.ucBarre1.Name = "ucBarre1";
             this.ucBarre1.Size = new System.Drawing.Size(1419, 48);
             this.ucBarre1.TabIndex = 0;
