@@ -25,6 +25,11 @@ namespace SAE_D21
             this.loadDataset();
             this.loadmenu();
             folderBrowserDialog.SelectedPath = "C:\\Users\\arnaudmichel\\source\\repos\\SAE_D21\\SAE_D21\\pdfRecettes";
+
+            ucBarre barre = new ucBarre();
+            barre.SetClick_Home(this.Click_Home);
+            barre.Location = new Point(0, 642);
+            this.Controls.Add(barre);
            
 
         }
@@ -73,8 +78,6 @@ namespace SAE_D21
 
 
             
-            ucBarre1.SetClick_Home(this.Click_Home);
-
 
             Label Titre = new Label();
 
