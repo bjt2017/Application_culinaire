@@ -302,10 +302,11 @@ namespace SAE_D21
             {
                 this.rechercher(searchbar);
             }
-            else if (e.KeyChar == (char)Keys.Back && searchbar.Text.Trim().Length >= 1 && recettes.Count > 0)
+            else if (e.KeyChar == (char)Keys.Back && searchbar.Text.Trim().Length == 1 && recettes.Count > 0)
             {
                 this.Clear();
                 this.loadmenu();
+                searchbar.Focus();
             }
             else if (e.KeyChar == (char)Keys.X)
             {
