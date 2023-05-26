@@ -466,6 +466,7 @@ namespace SAE_D21
 
             this.Clear();
 
+
             ucRechercheIngredient obj = new ucRechercheIngredient(dataset.Tables["Famille"], dataset.Tables["ingrédients"]);
 
             this.Controls.Add(obj);
