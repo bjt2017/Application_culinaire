@@ -28,6 +28,7 @@ namespace SAE_D21
 
             ucBarre barre = new ucBarre();
             barre.SetClick_Home(this.Click_Home);
+            barre.SetClick_Categorie(this.Click_Categorie);
             barre.Location = new Point(0, 642);
             this.Controls.Add(barre);
            
@@ -235,22 +236,7 @@ namespace SAE_D21
             return carte;
         }
 
-        private void clearctrl()
-        {
-            bool control = true;
-            while (control)
-            {
-                control = false;
-                foreach (Control c in this.Controls)
-                {
-                    if (c is ucCarte || c is ucCarteEtoile || c is carteGrande)
-                    {
-                        this.Controls.Remove(c);
-                        control = true;
-                    }
-                }
-            }
-        }
+       
 
         private void rechercher(System.Windows.Forms.TextBox searchbar)
         {
@@ -259,7 +245,7 @@ namespace SAE_D21
             ingredients = new string[3];
             rowingredient = new DataRow[3];
 
-            this.clearctrl();
+            this.Clear();
 
 
             String Texte = searchbar.Text.Trim().ToLower().Replace(", ", ",");
@@ -313,7 +299,7 @@ namespace SAE_D21
                 this.rechercher(searchbar);
             }else if (e.KeyChar == (char)Keys.Back && searchbar.Text.Length <= 1)
             {
-                this.clearctrl();
+                this.Clear();
                 this.loadmenu();
             }
             else if (e.KeyChar == (char)Keys.X)
@@ -455,7 +441,7 @@ namespace SAE_D21
             ucRechercheIngredient obj = new ucRechercheIngredient(dataset.Tables["Famille"], dataset.Tables["ingrédients"]);
 
             this.Controls.Add(obj);
-            select = 2;
+            select = -1;
 
         }
         public void Click_Home(object sender, EventArgs e)
@@ -468,6 +454,16 @@ namespace SAE_D21
                 select = 1;
             }
             
+            
+        }
+        public void Click_Categorie(object sender, EventArgs e)
+        {
+            if (select != 2) {
+                this.Clear();
+                ucCategorie c = new ucCategorie(dataset.Tables["Catégories"]);
+                this.Controls.Add(c);
+                select = 2;
+            }
             
         }
         private void panel_Paint(object sender, PaintEventArgs e)
