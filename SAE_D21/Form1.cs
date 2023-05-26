@@ -10,6 +10,7 @@ namespace SAE_D21
 {
     public partial class AppFrigo : Form
     {
+
         public AppFrigo()
         {
             InitializeComponent();
