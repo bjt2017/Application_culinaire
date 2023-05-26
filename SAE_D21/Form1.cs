@@ -328,17 +328,16 @@ namespace SAE_D21
             cmd.Connection = con;
             List<DataRow> ingrédientsrecette = new List<DataRow>();
             String command = "";
-            
+
             foreach (DataRow row in rowingredient)
             {
                 if (row == null)
                 {
-                    
+
                     break;
                 }
                 else
                 {
-                    MessageBox.Show(row.ToString());
                     command = "SELECT * FROM IngrédientsRecette WHERE codeIngredient = " + row["codeIngredient"];
                     cmd.CommandText = command;
                     OleDbDataReader reader = cmd.ExecuteReader();
@@ -346,17 +345,49 @@ namespace SAE_D21
                     dt.Load(reader);
                     foreach (DataRow row2 in dt.Rows)
                     {
-                        ingrédientsrecette.Add(row2);
+                        if (!ingrédientsrecette.Contains(row2))
+                        {
+                            ingrédientsrecette.Add(row2);
+
+                        }
                     }
-                    if (ingrédientsrecette.Count == 0)
+                }
+                if (ingrédientsrecette.Count == 0)
+                {
+                    errorProvider.SetError(searchbar.Parent.Parent, "Aucune recette ne contient ces ingrédients");
+                    searchbar.Parent.Parent.BackColor = Color.IndianRed;
+                    searchbar.ForeColor = Color.IndianRed;
+                    ingredients = new string[3];
+                    return;
+                }
+                else
+                {
+                    errorProvider.Clear();
+                    searchbar.Parent.Parent.BackColor = Color.DarkGray;
+                    searchbar.ForeColor = Color.DimGray;
+                    DataTable dt2 = new DataTable();
+                    OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+                    da.Fill(dt2);
+                    foreach (DataRow row3 in dt2.Rows)
                     {
-                        errorProvider.SetError(searchbar.Parent.Parent, "Aucune recette ne contient ces ingrédients");
-                        searchbar.Parent.Parent.BackColor = Color.IndianRed;
-                        searchbar.ForeColor = Color.IndianRed;
+                        command = "SELECT * FROM Recettes WHERE codeRecette = " + row3["codeRecette"];
+                        cmd.CommandText = command;
+                        OleDbDataReader reader2 = cmd.ExecuteReader();
+                        DataTable dt3 = new DataTable();
+                        dt3.Load(reader2);
+                        foreach (DataRow row4 in dt3.Rows)
+                        {
+                            if (!recettes.Contains(row4))
+                            {
+                                recettes.Add(row4);
+                            }
+                        }
+
                     }
-                    
+
                 }
             }
+           
             for (int i = 0; i < recettes.Count; i++)
             {
                 DataRow row = recettes[i];
