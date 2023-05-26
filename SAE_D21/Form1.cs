@@ -283,7 +283,7 @@ namespace SAE_D21
                     {
                         errorProvider.Clear();
                         rowingredient[i] = dataset.Tables["Ingrédients"].Select("libIngredient = '" + ingredients[i] + "'")[0];
-                        this.Clear();
+                        this.Clear_Menu();
                     }
                 }
                 this.listeIngredientInRecette();
