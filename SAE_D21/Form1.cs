@@ -34,7 +34,7 @@ namespace SAE_D21
             button.Click += testClick;
             this.Controls.Add(button);
 
-           
+
 
         }
 
@@ -45,10 +45,11 @@ namespace SAE_D21
 
         Random rnd = new Random();
 
-        private void loadmenu() {
+        private void loadmenu()
+        {
             Accueil.BarDeRecherche barDeRecherche1 = new Accueil.BarDeRecherche();
             barDeRecherche1.textBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.barDeRecherche1_KeyPress);
-            barDeRecherche1.Location = new Point((this.Width - barDeRecherche1.Width)/2-28, 87);
+            barDeRecherche1.Location = new Point((this.Width - barDeRecherche1.Width) / 2 - 28, 87);
 
 
             //Dessin button filtre
@@ -65,8 +66,8 @@ namespace SAE_D21
 
             boutton_filtre.Paint += this.panel_Paint;
             boutton_filtre2.Paint += this.panel_Paint;
-            
-            
+
+
             PictureBox image_filtre = new PictureBox();
             image_filtre.Image = Image.FromFile("../../assets/Logos/settings.png");
             image_filtre.Size = new Size(25, 25);
@@ -82,14 +83,14 @@ namespace SAE_D21
             boutton_filtre2.Controls.Add(image_filtre);
 
 
-            
+
 
             Label Titre = new Label();
 
             Titre.Size = new System.Drawing.Size(500, 42);
             Titre.Text = "Qu'est-ce qu'on mange ce soir ?";
 
-            Titre.Font = new System.Drawing.Font("Bahnschrift", 22, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            Titre.Font = new System.Drawing.Font("Bahnschrift", 22, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
             Titre.TextAlign = ContentAlignment.MiddleCenter;
             Titre.Location = new Point((this.Width) / 2 - (Titre.Size.Width) / 2, 25);
 
@@ -99,8 +100,8 @@ namespace SAE_D21
             Titre2.Size = new System.Drawing.Size(300, 42);
             Titre2.Text = "Nos recommandations";
 
-            Titre2.Font = new System.Drawing.Font("Bahnschrift", 16, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            Titre2.Location = new Point((this.Width) / 2 - (Titre2.Width) / 2 -15, 140);
+            Titre2.Font = new System.Drawing.Font("Bahnschrift", 16, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            Titre2.Location = new Point((this.Width) / 2 - (Titre2.Width) / 2 - 15, 140);
             Titre2.TextAlign = ContentAlignment.MiddleCenter;
             this.Controls.Add(Titre); this.Controls.Add(Titre2);
 
@@ -136,7 +137,7 @@ namespace SAE_D21
                     {
                         dtUnselected.Rows.RemoveAt(row);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
 
                     }
@@ -168,7 +169,7 @@ namespace SAE_D21
                 {
                     dtUnselected.Rows.RemoveAt(row);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
 
                 }
@@ -213,7 +214,7 @@ namespace SAE_D21
             }
         }
 
-        
+
         private ucCarte createCarte(DataRow dr, int x, int y)
         {
             // Create carte
@@ -240,7 +241,7 @@ namespace SAE_D21
             return carte;
         }
 
-       
+
 
         private void rechercher(System.Windows.Forms.TextBox searchbar)
         {
@@ -296,11 +297,12 @@ namespace SAE_D21
             searchbar.Parent.Parent.BackColor = Color.DarkGray;
             searchbar.ForeColor = Color.DimGray;
             errorProvider.Clear();
-            
+
             if (e.KeyChar == (char)Keys.Enter)
             {
                 this.rechercher(searchbar);
-            }else if (e.KeyChar == (char)Keys.Back && searchbar.Text.Trim().Length >= 1 && recettes.Count > 0)
+            }
+            else if (e.KeyChar == (char)Keys.Back && searchbar.Text.Trim().Length >= 1 && recettes.Count > 0)
             {
                 this.Clear();
                 this.loadmenu();
@@ -344,9 +346,9 @@ namespace SAE_D21
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    //MessageBox.Show(ex.Message);
+
                 }
             }
             for (int i = 0; i < recettes.Count; i++)
@@ -360,10 +362,10 @@ namespace SAE_D21
         private void carteGrande_Click(object sender, EventArgs e)
         {
             DataRow row = dataset.Tables["Recettes"].Rows[0];
-            
+
             if (sender is Panel)
             {
-                if(((Panel)sender).Parent is ucCarte)
+                if (((Panel)sender).Parent is ucCarte)
                 {
                     row = ((ucCarte)((Panel)sender).Parent).drow;
                 }
@@ -376,10 +378,11 @@ namespace SAE_D21
                     row = ((carteGrande)((Panel)sender).Parent).drow;
                 }
             }
-            else if (sender is UserControl) {
+            else if (sender is UserControl)
+            {
                 row = ((carteGrande)sender).drow;
             }
-            else if(sender is PictureBox)
+            else if (sender is PictureBox)
             {
                 if (((PictureBox)sender).Parent.Parent is ucCarte)
                 {
@@ -389,10 +392,11 @@ namespace SAE_D21
                 {
                     row = ((ucCarteEtoile)((PictureBox)sender).Parent.Parent).drow;
                 }
-                
+
             }
-            else if (sender is Label) {
-                
+            else if (sender is Label)
+            {
+
                 if (((Label)sender).Parent.Parent is ucCarte)
                 {
                     row = ((ucCarte)((Label)sender).Parent.Parent).drow;
@@ -416,7 +420,8 @@ namespace SAE_D21
 
         public void Clear()
         {
-            while(this.Controls.Count>1){
+            while (this.Controls.Count > 1)
+            {
                 foreach (Control c in this.Controls)
                 {
                     if (c is ucRechercheIngredient)
@@ -427,10 +432,10 @@ namespace SAE_D21
                     if (!(c is ucBarre))
                     {
                         this.Controls.Remove(c);
-                    }  
-                    
+                    }
+
                 }
-            } 
+            }
         }
         public void Clear_Menu()
         {
@@ -475,18 +480,19 @@ namespace SAE_D21
                 this.loadmenu();
                 select = 1;
             }
-            
-            
+
+
         }
         public void Click_Categorie(object sender, EventArgs e)
         {
-            if (select != 2) {
+            if (select != 2)
+            {
                 this.Clear();
                 ucCategorie c = new ucCategorie(dataset.Tables["Catégories"]);
                 this.Controls.Add(c);
                 select = 2;
             }
-            
+
         }
         private void panel_Paint(object sender, PaintEventArgs e)
         {
@@ -504,5 +510,5 @@ namespace SAE_D21
             ((Panel)sender).Region = new Region(path);
         }
     }
-    
+
 }
