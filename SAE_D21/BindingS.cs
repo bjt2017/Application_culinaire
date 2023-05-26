@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,6 @@ namespace SAE_D21
 {
     internal class BindingS
     {
-
         BindingSource bs = new BindingSource();
         public BindingS(Form form, DataSet ds, int i)
         {
@@ -42,6 +42,13 @@ namespace SAE_D21
             lblEtape.Location = new System.Drawing.Point(50, 150);
             lblEtape.AutoSize = true;
             form.Controls.Add(lblEtape);
+
+            PictureBox pb = new PictureBox();
+            pb.DataBindings.Add("Image", bs, "imageEtape", true);
+            pb.Location = new System.Drawing.Point(300, 100);
+            pb.Size = new System.Drawing.Size(200, 200);
+            pb.SizeMode = PictureBoxSizeMode.StretchImage;
+            form.Controls.Add(pb);
 
             Button btnFirst = new Button();
             btnFirst.Text = "Début";
