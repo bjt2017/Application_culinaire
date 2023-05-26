@@ -246,10 +246,15 @@ namespace SAE_D21
 
         private void rechercher(System.Windows.Forms.TextBox searchbar)
         {
+            //===== Mode Connecté =====
             // Remov all the uccarte on the screen
             recettes.Clear();
             ingredients = new string[3];
             rowingredient = new DataRow[3];
+
+            String command;
+            OleDbCommand cmd;
+            OleDbDataAdapter adapter ;
 
 
             String Texte = searchbar.Text.Trim().ToLower().Replace(", ", ",");
@@ -270,14 +275,16 @@ namespace SAE_D21
                 errorProvider.Clear();
                 for (int i = 0; i < ingredients.Length; i++)
                 {
-                    if (dataset.Tables["Ingrédients"].Select("libIngredient = '" + ingredients[i] + "'").Length == 0)
+                    command = "SELECT * FROM Ingrédients WHERE libIngredient = '" + ingredients[i] + "'";
+                    cmd = new OleDbCommand(command, con);
+                    DataTable dt = new DataTable();
+                    adapter = new OleDbDataAdapter(cmd);
+                    adapter.Fill(dt);
+                    if (dt.Rows.Count == 0)
                     {
+                        errorProvider.SetError(searchbar.Parent.Parent, "L'ingrédient " + ingredients[i] + " n'existe pas");
                         searchbar.Parent.Parent.BackColor = Color.IndianRed;
                         searchbar.ForeColor = Color.IndianRed;
-                        errorProvider.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
-
-                        errorProvider.SetIconPadding(searchbar.Parent.Parent, 5);
-                        errorProvider.SetError(searchbar.Parent.Parent, "L'ingrédient " + ingredients[i] + " n'existe pas");
                         ingredients = new string[3];
                         return;
                     }
