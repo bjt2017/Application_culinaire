@@ -13,14 +13,14 @@ using Accueil;
 
 namespace SAE_D21
 {
-    public partial class Form1 : Form
+    public partial class AppFrigo : Form
     {
-        public Form1()
+        public AppFrigo()
         {
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void AppCuisine_Load(object sender, EventArgs e)
         {
             this.loadDataset();
             this.loadmenu();
@@ -31,8 +31,21 @@ namespace SAE_D21
             barre.SetClick_Categorie(this.Click_Categorie);
             barre.Location = new Point(0, 642);
             this.Controls.Add(barre);
+
+            Button button = new Button();
+            button.Text = "Ajouter une recette";
+            button.Size = new Size(150, 50);
+            button.Location = new Point(0, 0);
+            button.Click += testClick;
+            this.Controls.Add(button);
+
            
 
+        }
+
+        private void testClick(object sender, EventArgs e)
+        {
+            BindingS binding = new BindingS(this, dataset, 1);
         }
 
         Random rnd = new Random();
@@ -58,10 +71,6 @@ namespace SAE_D21
             boutton_filtre.Paint += this.panel_Paint;
             boutton_filtre2.Paint += this.panel_Paint;
             
-            
-
-
-
             
             PictureBox image_filtre = new PictureBox();
             image_filtre.Image = Image.FromFile("../../assets/Logos/settings.png");
@@ -245,7 +254,7 @@ namespace SAE_D21
             ingredients = new string[3];
             rowingredient = new DataRow[3];
 
-            this.Clear();
+            this.Clear_Menu();
 
 
             String Texte = searchbar.Text.Trim().ToLower().Replace(", ", ",");
@@ -297,7 +306,7 @@ namespace SAE_D21
             if (e.KeyChar == (char)Keys.Enter)
             {
                 this.rechercher(searchbar);
-            }else if (e.KeyChar == (char)Keys.Back && searchbar.Text.Length <= 1)
+            }else if (e.KeyChar == (char)Keys.Back && searchbar.Text.Trim().Length >= 1 && recettes.Count > 0)
             {
                 this.Clear();
                 this.loadmenu();
@@ -428,6 +437,25 @@ namespace SAE_D21
                     
                 }
             } 
+        }
+        public void Clear_Menu()
+        {
+            while (this.Controls.Count > 2)
+            {
+                foreach (Control c in this.Controls)
+                {
+                    if (c is ucRechercheIngredient)
+                    {
+                        ((ucRechercheIngredient)c).ControlRemoved();
+
+                    }
+                    if (!(c is ucBarre || c is BarDeRecherche))
+                    {
+                        this.Controls.Remove(c);
+                    }
+
+                }
+            }
         }
 
 
