@@ -409,7 +409,7 @@ namespace SAE_D21
 
             Accueil.FeuilleRecette f = new Accueil.FeuilleRecette(row);
             f.Location = new Point(0,0);
-            this.Clear_Menu();
+            this.Clear();
             this.Controls.Add(f);
             select = -1;
         }
