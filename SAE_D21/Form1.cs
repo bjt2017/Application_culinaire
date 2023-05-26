@@ -320,7 +320,7 @@ namespace SAE_D21
             if (e.KeyChar == (char)Keys.Enter)
             {
                 this.rechercher(searchbar);
-            }else if (e.KeyChar == (char)Keys.Back && searchbar.Text.Trim().Length >= 1)
+            }else if (e.KeyChar == (char)Keys.Back && searchbar.Text.Trim().Length >= 1 && recettes.Count > 0)
             {
                 this.clearctrl();
                 this.loadmenu();

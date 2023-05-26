@@ -43,13 +43,6 @@ namespace SAE_D21
             lblEtape.AutoSize = true;
             form.Controls.Add(lblEtape);
 
-            PictureBox pb = new PictureBox();
-            pb.DataBindings.Add("Image", bs, "imageEtape", true);
-            pb.Location = new System.Drawing.Point(300, 100);
-            pb.Size = new System.Drawing.Size(200, 200);
-            pb.SizeMode = PictureBoxSizeMode.StretchImage;
-            form.Controls.Add(pb);
-
             Button btnFirst = new Button();
             btnFirst.Text = "Début";
             btnFirst.Location = new System.Drawing.Point(50, 200);
