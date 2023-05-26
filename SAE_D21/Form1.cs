@@ -212,6 +212,7 @@ namespace SAE_D21
                     MessageBox.Show(ex.Message);
                 }
             }
+            con.Close();
         }
 
 
@@ -287,7 +288,7 @@ namespace SAE_D21
                         this.Clear_Menu();
                     }
                 }
-                this.listeIngredientInRecette();
+                this.listeIngredientInRecette(searchbar);
             }
         }
 
@@ -300,13 +301,14 @@ namespace SAE_D21
 
             if (e.KeyChar == (char)Keys.Enter)
             {
+                con.Open();
                 this.rechercher(searchbar);
+                con.Close();
             }
             else if (e.KeyChar == (char)Keys.Back && searchbar.Text.Trim().Length == 1 && recettes.Count > 0)
             {
                 this.Clear();
                 this.loadmenu();
-                searchbar.Focus();
             }
             else if (e.KeyChar == (char)Keys.X)
             {
@@ -318,40 +320,74 @@ namespace SAE_D21
                 }
             }
         }
-        private void listeIngredientInRecette()
+        private void listeIngredientInRecette(TextBox searchbar)
         {
+            // ====== Mode Connecté ======
+            OleDbCommand cmd = new OleDbCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.Connection = con;
             List<DataRow> ingrédientsrecette = new List<DataRow>();
+            String command = "";
+
             foreach (DataRow row in rowingredient)
             {
-                try
+                if (row == null)
                 {
-                    if (row != null && dataset.Tables["IngrédientsRecette"].Select("codeIngredient = '" + row["codeIngredient"] + "'").Length == 0)
+
+                    break;
+                }
+                else
+                {
+                    command = "SELECT * FROM IngrédientsRecette WHERE codeIngredient = " + row["codeIngredient"];
+                    cmd.CommandText = command;
+                    OleDbDataReader reader = cmd.ExecuteReader();
+                    DataTable dt = new DataTable();
+                    dt.Load(reader);
+                    foreach (DataRow row2 in dt.Rows)
                     {
-                        //errorProvider.SetError(sear.textBox, "Aucune recette n'est faite de " + row["libIngredient"]);
-                        ingredients = new string[3];
-                        return;
-                    }
-                    else
-                    {
-                        errorProvider.Clear();
-                        if (row != null)
+                        if (!ingrédientsrecette.Contains(row2))
                         {
-                            DataRow[] dr = dataset.Tables["IngrédientsRecette"].Select("codeIngredient = '" + row["codeIngredient"] + "'");
-                            foreach (DataRow r in dr)
-                            {
-                                if (!recettes.Contains(dataset.Tables["Recettes"].Select("codeRecette = '" + r["codeRecette"] + "'")[0]))
-                                {
-                                    recettes.Add(dataset.Tables["Recettes"].Select("codeRecette = '" + r["codeRecette"] + "'")[0]);
-                                }
-                            }
+                            ingrédientsrecette.Add(row2);
+
                         }
                     }
                 }
-                catch (Exception)
+                if (ingrédientsrecette.Count == 0)
                 {
+                    errorProvider.SetError(searchbar.Parent.Parent, "Aucune recette ne contient ces ingrédients");
+                    searchbar.Parent.Parent.BackColor = Color.IndianRed;
+                    searchbar.ForeColor = Color.IndianRed;
+                    ingredients = new string[3];
+                    return;
+                }
+                else
+                {
+                    errorProvider.Clear();
+                    searchbar.Parent.Parent.BackColor = Color.DarkGray;
+                    searchbar.ForeColor = Color.DimGray;
+                    DataTable dt2 = new DataTable();
+                    OleDbDataAdapter da = new OleDbDataAdapter(cmd);
+                    da.Fill(dt2);
+                    foreach (DataRow row3 in dt2.Rows)
+                    {
+                        command = "SELECT * FROM Recettes WHERE codeRecette = " + row3["codeRecette"];
+                        cmd.CommandText = command;
+                        OleDbDataReader reader2 = cmd.ExecuteReader();
+                        DataTable dt3 = new DataTable();
+                        dt3.Load(reader2);
+                        foreach (DataRow row4 in dt3.Rows)
+                        {
+                            if (!recettes.Contains(row4))
+                            {
+                                recettes.Add(row4);
+                            }
+                        }
+
+                    }
 
                 }
             }
+           
             for (int i = 0; i < recettes.Count; i++)
             {
                 DataRow row = recettes[i];
