@@ -284,7 +284,7 @@ namespace SAE_D21
                     {
                         errorProvider.Clear();
                         rowingredient[i] = dataset.Tables["Ingrédients"].Select("libIngredient = '" + ingredients[i] + "'")[0];
-                        this.Clear();
+                        this.Clear_Menu();
                     }
                 }
                 this.listeIngredientInRecette();
@@ -412,8 +412,8 @@ namespace SAE_D21
             }
 
             Accueil.FeuilleRecette f = new Accueil.FeuilleRecette(row);
-            f.Location = new Point(0, 0);
-            this.Clear();
+            f.Location = new Point(0,0);
+            this.Clear_Menu();
             this.Controls.Add(f);
             select = -1;
         }
@@ -430,6 +430,25 @@ namespace SAE_D21
 
                     }
                     if (!(c is ucBarre))
+                    {
+                        this.Controls.Remove(c);
+                    }
+
+                }
+            }
+        }
+        public void Clear_Menu()
+        {
+            while (this.Controls.Count > 2)
+            {
+                foreach (Control c in this.Controls)
+                {
+                    if (c is ucRechercheIngredient)
+                    {
+                        ((ucRechercheIngredient)c).ControlRemoved();
+
+                    }
+                    if (!(c is ucBarre || c is BarDeRecherche))
                     {
                         this.Controls.Remove(c);
                     }
