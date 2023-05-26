@@ -25,6 +25,11 @@ namespace SAE_D21
             this.loadDataset();
             this.loadmenu();
             folderBrowserDialog.SelectedPath = "C:\\Users\\arnaudmichel\\source\\repos\\SAE_D21\\SAE_D21\\pdfRecettes";
+
+            ucBarre barre = new ucBarre();
+            barre.SetClick_Home(this.Click_Home);
+            barre.Location = new Point(0, 642);
+            this.Controls.Add(barre);
            
 
         }
@@ -34,15 +39,50 @@ namespace SAE_D21
         private void loadmenu() {
             Accueil.BarDeRecherche barDeRecherche1 = new Accueil.BarDeRecherche();
             barDeRecherche1.textBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.barDeRecherche1_KeyPress);
-            barDeRecherche1.Location = new Point((this.Width - barDeRecherche1.Width)/2, 87);
+            barDeRecherche1.Location = new Point((this.Width - barDeRecherche1.Width)/2-28, 87);
 
 
-            ucBarre1.SetClick(this.Click_Recherche_Ingredient);
+            //Dessin button filtre
+            Panel boutton_filtre = new Panel();
+            boutton_filtre.Size = new Size(37, 37);
+            boutton_filtre.BackColor = Color.Gray;
+            boutton_filtre.Location = new Point(barDeRecherche1.Location.X + barDeRecherche1.Width + 15, barDeRecherche1.Location.Y);
+
+            Panel boutton_filtre2 = new Panel();
+            boutton_filtre2.Size = new Size(35, 35);
+            boutton_filtre2.BackColor = Color.White;
+            boutton_filtre2.Location = new Point(1, 1);
+
+
+            boutton_filtre.Paint += this.panel_Paint;
+            boutton_filtre2.Paint += this.panel_Paint;
+            
+            
+
+
+
+            
+            PictureBox image_filtre = new PictureBox();
+            image_filtre.Image = Image.FromFile("../../assets/Logos/settings.png");
+            image_filtre.Size = new Size(25, 25);
+            image_filtre.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            image_filtre.Location = new Point(5, 5);
+
+            boutton_filtre2.Click += Click_Recherche_Ingredient;
+            image_filtre.Click += Click_Recherche_Ingredient;
+
+            this.Controls.Add(boutton_filtre);
+
+            boutton_filtre.Controls.Add(boutton_filtre2);
+            boutton_filtre2.Controls.Add(image_filtre);
+
+
+            
 
             Label Titre = new Label();
 
             Titre.Size = new System.Drawing.Size(500, 42);
-            Titre.Text = "Qu'es ce que on mange ce soir ?";
+            Titre.Text = "Qu'est-ce qu'on mange ce soir ?";
 
             Titre.Font = new System.Drawing.Font("Bahnschrift", 22, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             Titre.TextAlign = ContentAlignment.MiddleCenter;
@@ -55,7 +95,7 @@ namespace SAE_D21
             Titre2.Text = "Nos recommandations";
 
             Titre2.Font = new System.Drawing.Font("Bahnschrift", 16, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            Titre2.Location = new Point((this.Width) / 2 - (Titre2.Width) / 2, 140);
+            Titre2.Location = new Point((this.Width) / 2 - (Titre2.Width) / 2 -15, 140);
             Titre2.TextAlign = ContentAlignment.MiddleCenter;
             this.Controls.Add(Titre); this.Controls.Add(Titre2);
 
@@ -382,6 +422,7 @@ namespace SAE_D21
             f.Location = new Point(0,0);
             this.Clear();
             this.Controls.Add(f);
+            select = -1;
         }
 
         public void Clear()
@@ -403,13 +444,46 @@ namespace SAE_D21
             } 
         }
 
+
+
+        private int select = 1;
         public void Click_Recherche_Ingredient(object sender, EventArgs e)
         {
+
             this.Clear();
 
             ucRechercheIngredient obj = new ucRechercheIngredient(dataset.Tables["Famille"], dataset.Tables["ingrédients"]);
-            
+
             this.Controls.Add(obj);
+            select = 2;
+
+        }
+        public void Click_Home(object sender, EventArgs e)
+        {
+            if (select != 1)
+            {
+                this.Clear();
+
+                this.loadmenu();
+                select = 1;
+            }
+            
+            
+        }
+        private void panel_Paint(object sender, PaintEventArgs e)
+        {
+            int radius = 10; // Rayon des bords ronds
+            System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
+            path.StartFigure();
+            path.AddArc(0, 0, radius, radius, 180, 90);
+            path.AddLine(radius, 0, ((Panel)sender).Width - radius, 0);
+            path.AddArc(((Panel)sender).Width - radius, 0, radius, radius, 270, 90);
+            path.AddLine(((Panel)sender).Width, radius, ((Panel)sender).Width, ((Panel)sender).Height - radius);
+            path.AddArc(((Panel)sender).Width - radius, ((Panel)sender).Height - radius, radius, radius, 0, 90);
+            path.AddLine(((Panel)sender).Width - radius, ((Panel)sender).Height, radius, ((Panel)sender).Height);
+            path.AddArc(0, ((Panel)sender).Height - radius, radius, radius, 90, 90);
+            path.CloseFigure();
+            ((Panel)sender).Region = new Region(path);
         }
     }
     
