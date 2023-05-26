@@ -1,15 +1,10 @@
 ﻿using Accueil;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.OleDb;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Accueil;
 
 namespace SAE_D21
 {
@@ -254,8 +249,6 @@ namespace SAE_D21
             ingredients = new string[3];
             rowingredient = new DataRow[3];
 
-            this.Clear();
-
 
             String Texte = searchbar.Text.Trim().ToLower().Replace(", ", ",");
             ingredients = Texte.Split(',');
@@ -290,6 +283,7 @@ namespace SAE_D21
                     {
                         errorProvider.Clear();
                         rowingredient[i] = dataset.Tables["Ingrédients"].Select("libIngredient = '" + ingredients[i] + "'")[0];
+                        this.Clear();
                     }
                 }
                 this.listeIngredientInRecette();
