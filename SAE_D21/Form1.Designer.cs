@@ -54,9 +54,6 @@
             this.ResumeLayout(false);
 
         }
-
-
-
         #endregion
         private System.Windows.Forms.ErrorProvider errorProvider;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
