@@ -391,7 +391,7 @@ namespace SAE_D21
                 }
             }
             Panel pnl = new Panel();
-            pnl.Size = new Size(1080, 520);
+            pnl.Size = new Size(1080, 440);
             pnl.Location = new Point(0, 200);
             pnl.AutoScroll = true;
             pnl.BackColor = Color.Transparent;
