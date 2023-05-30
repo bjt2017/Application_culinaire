@@ -87,20 +87,15 @@ namespace SAE_D21
 
 
             Label Titre = new Label();
-
             Titre.Size = new System.Drawing.Size(500, 42);
             Titre.Text = "Qu'est-ce qu'on mange ce soir ?";
-
             Titre.Font = new System.Drawing.Font("Bahnschrift", 22, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
             Titre.TextAlign = ContentAlignment.MiddleCenter;
             Titre.Location = new Point((this.Width) / 2 - (Titre.Size.Width) / 2, 25);
 
-
-
             Label Titre2 = new Label();
             Titre2.Size = new System.Drawing.Size(300, 42);
             Titre2.Text = "Nos recommandations";
-
             Titre2.Font = new System.Drawing.Font("Bahnschrift", 16, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
             Titre2.Location = new Point((this.Width) / 2 - (Titre2.Width) / 2 - 15, 140);
             Titre2.TextAlign = ContentAlignment.MiddleCenter;
@@ -111,7 +106,6 @@ namespace SAE_D21
             panel.Width = 896;
             panel.Height = 2;
             panel.Location = new Point((this.Width) / 2 - (panel.Width) / 2, 160);
-
             this.Controls.Add(panel);
             this.Controls.Add(barDeRecherche1);
             DataTable dtUnselected = dataset.Tables["Recettes"].Copy();
@@ -294,11 +288,13 @@ namespace SAE_D21
                     {
                         errorProvider.Clear();
                         rowingredient[i] = dataset.Tables["Ingrédients"].Select("libIngredient = '" + ingredients[i] + "'")[0];
-                        this.Clear_Menu();
                     }
                 }
-                con.Close();
                 this.listeIngredientInRecette();
+            }
+            if (con.State == ConnectionState.Open)
+            {
+                con.Close();
             }
         }
 
@@ -330,7 +326,10 @@ namespace SAE_D21
         }
         private void listeIngredientInRecette()
         {
-            con.Open();
+            if (con.State == ConnectionState.Closed)
+            {
+                con.Open();
+            }
             // ====== Mode Connecté ======
             OleDbCommand cmd = new OleDbCommand();
             cmd.CommandType = CommandType.Text;
@@ -390,16 +389,44 @@ namespace SAE_D21
                     }
 
                 }
-                con.Close();
             }
-            this.Clear();
-           
+            Panel pnl = new Panel();
+            pnl.Size = new Size(1080, 520);
+            pnl.Location = new Point(0, 200);
+            pnl.AutoScroll = true;
+            pnl.BackColor = Color.Transparent;
+            this.Controls.Add(pnl);
+            this.Clear_Menu();
+            con.Close();
+            Label Titre = new Label();
+            Titre.Size = new System.Drawing.Size(500, 42);
+            Titre.Text = "Qu'est-ce qu'on mange ce soir ?";
+            Titre.Font = new System.Drawing.Font("Bahnschrift", 22, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            Titre.TextAlign = ContentAlignment.MiddleCenter;
+            Titre.Location = new Point((this.Width) / 2 - (Titre.Size.Width) / 2, 25);
+
+            Label Titre2 = new Label();
+            Titre2.Size = new System.Drawing.Size(300, 42);
+            Titre2.Text = "Résulatats";
+            Titre2.Font = new System.Drawing.Font("Bahnschrift", 16, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            Titre2.Location = new Point((this.Width) / 2 - (Titre2.Width) / 2 - 15, 140);
+            Titre2.TextAlign = ContentAlignment.MiddleCenter;
+            this.Controls.Add(Titre); this.Controls.Add(Titre2);
+
+            Panel panel = new Panel();
+            panel.BackColor = Color.FromArgb(255, 0, 0, 0);
+            panel.Width = 896;
+            panel.Height = 2;
+            panel.Location = new Point((this.Width) / 2 - (panel.Width) / 2, 160);
+            this.Controls.Add(panel);
+
             for (int i = 0; i < recettes.Count; i++)
             {
                 DataRow row = recettes[i];
-                ucCarteEtoile carte = this.createCarteStars(row, 10, (i * 93));
-                this.Controls.Add(carte);
+                ucCarteEtoile carte = this.createCarteStars(row, 50 + (i% 3) * 330, 0 + (i/3) * 100);
+                pnl.Controls.Add(carte);
             }
+            select = -1;
         }
 
         private void carteGrande_Click(object sender, EventArgs e)
