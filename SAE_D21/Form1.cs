@@ -34,9 +34,6 @@ namespace SAE_D21
             button.Location = new Point(0, 0);
             button.Click += testClick;
             this.Controls.Add(button);
-
-
-
         }
 
         private void testClick(object sender, EventArgs e)
