@@ -345,6 +345,7 @@ namespace SAE_D21
                     break;
                 }
                 else
+
                 {
                     command = "SELECT * FROM IngrédientsRecette WHERE codeIngredient = " + row["codeIngredient"];
                     cmd.CommandText = command;
@@ -353,10 +354,22 @@ namespace SAE_D21
                     dt.Load(reader);
                     foreach (DataRow row2 in dt.Rows)
                     {
-                        if (!ingrédientsrecette.Contains(row2))
+                        Boolean t = false;
+                        foreach(DataRow row3 in ingrédientsrecette)
+                        {
+                            if (row3["codeRecette"].ToString() == row2["codeRecette"].ToString())
+                            {
+                                t = true;
+                            }
+
+                        }
+                        if (!t)
                         {
                             ingrédientsrecette.Add(row2);
-
+                        }
+                        else
+                        {
+                            MessageBox.Show(row2["codeRecette"].ToString());
                         }
                     }
                 }
