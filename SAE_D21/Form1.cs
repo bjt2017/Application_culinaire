@@ -404,12 +404,12 @@ namespace SAE_D21
                 }
             }
             Panel pnl = new Panel();
-            pnl.Size = new Size(1080, 520);
+            pnl.Size = new Size(1080, 440);
             pnl.Location = new Point(0, 200);
             pnl.AutoScroll = true;
             pnl.BackColor = Color.Transparent;
+            this.Clear();
             this.Controls.Add(pnl);
-            this.Clear_Menu();
             con.Close();
             Label Titre = new Label();
             Titre.Size = new System.Drawing.Size(500, 42);
