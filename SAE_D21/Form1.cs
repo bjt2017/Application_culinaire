@@ -282,7 +282,7 @@ namespace SAE_D21
                     adapter.Fill(dt);
                     if (dt.Rows.Count == 0)
                     {
-                        errorProvider.SetError(searchbar.Parent.Parent, "L'ingrédient " + ingredients[i] + " n'existe pas");
+                        errorProvider.SetError(searchbar.Parent.Parent, "L'ingrédient " + ingredients[i] + " n'  existe pas");
                         searchbar.Parent.Parent.BackColor = Color.IndianRed;
                         searchbar.ForeColor = Color.IndianRed;
                         ingredients = new string[3];
