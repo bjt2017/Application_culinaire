@@ -390,8 +390,9 @@ namespace SAE_D21
                     }
 
                 }
-                con.Close();
+                
             }
+            con.Close();
             this.Clear();
            
             for (int i = 0; i < recettes.Count; i++)
