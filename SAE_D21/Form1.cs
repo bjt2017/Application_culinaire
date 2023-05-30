@@ -241,7 +241,11 @@ namespace SAE_D21
 
         private void rechercher(System.Windows.Forms.TextBox searchbar)
         {
-            con.Open();
+            if (con.State == ConnectionState.Closed)
+            {
+                con.Open();
+            }
+            
             //===== Mode Connecté =====
             // Remov all the uccarte on the screen
             recettes.Clear();
@@ -336,72 +340,23 @@ namespace SAE_D21
             cmd.Connection = con;
             List<DataRow> ingrédientsrecette = new List<DataRow>();
             String command = "";
-
-            foreach (DataRow row in rowingredient)
+            recettes.Clear();
+            foreach (DataRow ingredient in rowingredient)
             {
-                if (row == null)
+                if (ingredient == null)
                 {
-
                     break;
                 }
-                else
-
+                MessageBox.Show("SELECT * FROM recettes WHERE codeRecette IN(SELECT codeRecette FROM IngrédientsRecette WHERE codeIngredient = " + ingredient["codeIngredient"] + ")");
+                command = "SELECT * FROM recettes WHERE codeRecette IN(SELECT codeRecette FROM IngrédientsRecette WHERE codeIngredient = " + ingredient["codeIngredient"] + ")";
+                cmd.CommandText = command;
+                OleDbDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    command = "SELECT * FROM IngrédientsRecette WHERE codeIngredient = " + row["codeIngredient"];
-                    cmd.CommandText = command;
-                    OleDbDataReader reader = cmd.ExecuteReader();
-                    DataTable dt = new DataTable();
-                    dt.Load(reader);
-                    foreach (DataRow row2 in dt.Rows)
-                    {
-                        Boolean t = false;
-                        foreach(DataRow row3 in ingrédientsrecette)
-                        {
-                            if (row3["codeRecette"].ToString() == row2["codeRecette"].ToString())
-                            {
-                                t = true;
-                            }
-
-                        }
-                        if (!t)
-                        {
-                            ingrédientsrecette.Add(row2);
-                        }
-                        else
-                        {
-                            MessageBox.Show(row2["codeRecette"].ToString());
-                        }
-                    }
+                    if (!recettes.Contains(dataset.Tables["recettes"].Select("codeRecette = " + reader["codeRecette"])[0]))
+                    recettes.Add(dataset.Tables["recettes"].Select("codeRecette = " + reader["codeRecette"])[0]);
                 }
-                if (ingrédientsrecette.Count == 0)
-                {
-                    ingredients = new string[3];
-                    return;
-                }
-                else
-                {
-                    errorProvider.Clear();
-                    DataTable dt2 = new DataTable();
-                    OleDbDataAdapter da = new OleDbDataAdapter(cmd);
-                    da.Fill(dt2);
-                    foreach (DataRow row3 in dt2.Rows)
-                    {
-                        command = "SELECT * FROM Recettes WHERE codeRecette = " + row3["codeRecette"];
-                        cmd.CommandText = command;
-                        OleDbDataReader reader2 = cmd.ExecuteReader();
-                        DataTable dt3 = new DataTable();
-                        dt3.Load(reader2);
-                        foreach (DataRow row4 in dt3.Rows)
-                        {
-                            if (!recettes.Contains(row4))
-                            {
-                                recettes.Add(row4);
-                            }
-                        }
-
-                    }
-
-                }
+                reader.Close();
             }
             Panel pnl = new Panel();
             pnl.Size = new Size(1080, 440);
