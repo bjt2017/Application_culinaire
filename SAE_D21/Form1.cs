@@ -10,6 +10,7 @@ namespace SAE_D21
 {
     public partial class AppFrigo : Form
     {
+
         public AppFrigo()
         {
             InitializeComponent();
@@ -246,6 +247,7 @@ namespace SAE_D21
 
         private void rechercher(System.Windows.Forms.TextBox searchbar)
         {
+            con.Open();
             //===== Mode Connecté =====
             // Remov all the uccarte on the screen
             recettes.Clear();
@@ -295,7 +297,8 @@ namespace SAE_D21
                         this.Clear_Menu();
                     }
                 }
-                this.listeIngredientInRecette(searchbar);
+                con.Close();
+                this.listeIngredientInRecette();
             }
         }
 
@@ -308,9 +311,7 @@ namespace SAE_D21
 
             if (e.KeyChar == (char)Keys.Enter)
             {
-                con.Open();
                 this.rechercher(searchbar);
-                con.Close();
             }
             else if (e.KeyChar == (char)Keys.Back && searchbar.Text.Trim().Length == 1 && recettes.Count > 0)
             {
@@ -327,8 +328,9 @@ namespace SAE_D21
                 }
             }
         }
-        private void listeIngredientInRecette(TextBox searchbar)
+        private void listeIngredientInRecette()
         {
+            con.Open();
             // ====== Mode Connecté ======
             OleDbCommand cmd = new OleDbCommand();
             cmd.CommandType = CommandType.Text;
@@ -361,17 +363,12 @@ namespace SAE_D21
                 }
                 if (ingrédientsrecette.Count == 0)
                 {
-                    errorProvider.SetError(searchbar.Parent.Parent, "Aucune recette ne contient ces ingrédients");
-                    searchbar.Parent.Parent.BackColor = Color.IndianRed;
-                    searchbar.ForeColor = Color.IndianRed;
                     ingredients = new string[3];
                     return;
                 }
                 else
                 {
                     errorProvider.Clear();
-                    searchbar.Parent.Parent.BackColor = Color.DarkGray;
-                    searchbar.ForeColor = Color.DimGray;
                     DataTable dt2 = new DataTable();
                     OleDbDataAdapter da = new OleDbDataAdapter(cmd);
                     da.Fill(dt2);
@@ -393,7 +390,9 @@ namespace SAE_D21
                     }
 
                 }
+                con.Close();
             }
+            this.Clear();
            
             for (int i = 0; i < recettes.Count; i++)
             {
@@ -510,12 +509,28 @@ namespace SAE_D21
             this.Clear();
 
 
-            ucRechercheIngredient obj = new ucRechercheIngredient(dataset.Tables["Famille"], dataset.Tables["ingrédients"]);
+            ucRechercheIngredient obj = new ucRechercheIngredient(dataset.Tables["Famille"], dataset.Tables["ingrédients"], Recherche_Ingredient);
 
             this.Controls.Add(obj);
             select = -1;
 
         }
+
+        public void Recherche_Ingredient(object sender, EventArgs e)
+        {
+            ucRechercheIngredient ri;
+            if(sender is Panel)
+            {
+                ri = ((Panel)sender).Parent.Parent as ucRechercheIngredient;
+            }
+            else
+            {
+                ri = ((Label)sender).Parent.Parent.Parent as ucRechercheIngredient;
+            }
+            rowingredient = ri.Ingredient;
+            this.listeIngredientInRecette();
+        }
+
         public void Click_Home(object sender, EventArgs e)
         {
             if (select != 1)
