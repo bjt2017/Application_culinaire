@@ -35,9 +35,6 @@ namespace SAE_D21
             button.Location = new Point(0, 0);
             button.Click += testClick;
             this.Controls.Add(button);
-
-
-
         }
 
         private void testClick(object sender, EventArgs e)
@@ -185,7 +182,7 @@ namespace SAE_D21
         }
 
         // Connection string to database file
-        string chcon = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=baseFrigo.accdb";
+        string chcon = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=baseFrigov2023.mdb";
         OleDbConnection con = new OleDbConnection();
         DataSet dataset = new DataSet();
 
