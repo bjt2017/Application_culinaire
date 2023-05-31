@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace SAE_D21
@@ -34,9 +35,6 @@ namespace SAE_D21
             button.Location = new Point(0, 0);
             button.Click += testClick;
             this.Controls.Add(button);
-
-
-
         }
 
         private void testClick(object sender, EventArgs e)
@@ -44,6 +42,7 @@ namespace SAE_D21
             BindingS binding = new BindingS(this, dataset, 1);
         }
 
+        private int idAccount = -1;
         Random rnd = new Random();
 
         private void loadmenu()
@@ -83,7 +82,16 @@ namespace SAE_D21
             boutton_filtre.Controls.Add(boutton_filtre2);
             boutton_filtre2.Controls.Add(image_filtre);
 
+            PictureBox imageAccount = new PictureBox();
+            imageAccount.Image = Image.FromFile("../../assets/account/user.png");
+            imageAccount.Size = new Size(40, 40);
+            imageAccount.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            imageAccount.Location = new Point(Width - 79, 15);
+            imageAccount.Tag = "user";
+            imageAccount.Click += user_Click;
+            this.Controls.Add(imageAccount);
 
+            setImageAccount();
 
 
             Label Titre = new Label();
@@ -144,7 +152,7 @@ namespace SAE_D21
             }
             Panel panel2 = new Panel();
             panel2.BackColor = Color.FromArgb(255, 128, 128, 128);
-            panel2.Width = 1000;
+            panel2.Width = 1000; 
             panel2.Height = 1;
             panel2.Location = new Point((this.Width) / 2 - (panel2.Width) / 2 - 5, 405);
             this.Controls.Add(panel2);
@@ -174,7 +182,7 @@ namespace SAE_D21
         }
 
         // Connection string to database file
-        string chcon = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=baseFrigo.accdb";
+        string chcon = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=baseFrigov2023.mdb";
         OleDbConnection con = new OleDbConnection();
         DataSet dataset = new DataSet();
 
@@ -183,6 +191,65 @@ namespace SAE_D21
         string[] ingredients = new string[3];
         DataRow[] rowingredient = new DataRow[3];
         List<DataRow> recettes = new List<DataRow>();
+
+        private void user_Click(object sender, EventArgs e)
+        {
+            Login form1 = new Login(dataset);
+            form1.ShowDialog();
+            if (form1.DialogResult == DialogResult.OK)
+            {
+                idAccount = form1.Id;
+                setImageAccount();
+                
+            }
+            //this.Close();
+        }
+
+        private void setImageAccount()
+        {
+            if (idAccount > 0)
+            {
+                foreach (Control ctr in this.Controls.OfType<PictureBox>())
+                {
+                    if (ctr.Tag.ToString() == "user")
+                    {
+                        ((PictureBox)ctr).Image = Image.FromFile("../../assets/account/userCo.png");
+                    }
+                }
+                foreach (Control ctr in this.Controls.OfType<Label>())
+                {
+                    try
+                    {
+                        if (ctr.Tag != null && ctr.Tag.ToString() == "user")
+                        {
+                            this.Controls.Remove(ctr);
+                        }
+                    }catch (Exception)
+                    {
+
+                    }
+                }
+                Label label = new Label();
+                label.Tag = "user";
+                label.Text = dataset.Tables["User"].Select("codeUser = " + idAccount)[0]["prenom"].ToString();
+                label.Font = new Font("Bahnschrift", 12, FontStyle.Bold);
+                label.Location = new Point(this.Width - 122, 50);
+                label.Size = new Size(128, 32);
+                label.TextAlign = ContentAlignment.MiddleCenter;
+                label.AutoSize = false;
+                this.Controls.Add(label);
+            }
+            else
+            {
+                foreach (Control ctr in this.Controls.OfType<PictureBox>())
+                {
+                    if (ctr.Tag.ToString() == "user")
+                    {
+                        ((PictureBox)ctr).Image = Image.FromFile("../../assets/account/user.png");
+                    }
+                }
+            }
+        }
 
         // Load dataset
         private void loadDataset()
