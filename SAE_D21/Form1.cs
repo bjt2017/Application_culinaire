@@ -35,7 +35,14 @@ namespace SAE_D21
             button.Location = new Point(0, 0);
             button.Click += testClick;
             this.Controls.Add(button);
+
+            rechercheIng = new ucRechercheIngredient(dataset.Tables["Famille"], dataset.Tables["ingrédients"], Recherche_Ingredient);
+            CategoriePage = new ucCategorie(dataset.Tables["Catégories"]);
         }
+
+        ucRechercheIngredient rechercheIng;
+        ucCategorie CategoriePage;
+
 
         private void testClick(object sender, EventArgs e)
         {
@@ -44,6 +51,7 @@ namespace SAE_D21
 
         private int idAccount = -1;
         Random rnd = new Random();
+        
 
         private void loadmenu()
         {
@@ -566,11 +574,7 @@ namespace SAE_D21
             {
                 foreach (Control c in this.Controls)
                 {
-                    if (c is ucRechercheIngredient)
-                    {
-                        ((ucRechercheIngredient)c).ControlRemoved();
-
-                    }
+                   
                     if (!(c is ucBarre))
                     {
                         this.Controls.Remove(c);
@@ -585,11 +589,7 @@ namespace SAE_D21
             {
                 foreach (Control c in this.Controls)
                 {
-                    if (c is ucRechercheIngredient)
-                    {
-                        ((ucRechercheIngredient)c).ControlRemoved();
-
-                    }
+                    
                     if (!(c is ucBarre || c is BarDeRecherche))
                     {
                         this.Controls.Remove(c);
@@ -608,9 +608,9 @@ namespace SAE_D21
             this.Clear();
 
 
-            ucRechercheIngredient obj = new ucRechercheIngredient(dataset.Tables["Famille"], dataset.Tables["ingrédients"], Recherche_Ingredient);
+            
 
-            this.Controls.Add(obj);
+            this.Controls.Add(rechercheIng);
             select = -1;
 
         }
@@ -647,8 +647,8 @@ namespace SAE_D21
             if (select != 2)
             {
                 this.Clear();
-                ucCategorie c = new ucCategorie(dataset.Tables["Catégories"]);
-                this.Controls.Add(c);
+                
+                this.Controls.Add(CategoriePage);
                 select = 2;
             }
 
