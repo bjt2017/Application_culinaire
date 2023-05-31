@@ -442,7 +442,7 @@ namespace SAE_D21
 
             Label Titre2 = new Label();
             Titre2.Size = new System.Drawing.Size(300, 42);
-            Titre2.Text = "Résulatats";
+            Titre2.Text = "Résultats";
             Titre2.Font = new System.Drawing.Font("Bahnschrift", 16, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
             Titre2.Location = new Point((this.Width) / 2 - (Titre2.Width) / 2 - 15, 140);
             Titre2.TextAlign = ContentAlignment.MiddleCenter;
