@@ -70,7 +70,7 @@ namespace SAE_D21
 
 
             PictureBox image_filtre = new PictureBox();
-            image_filtre.Image = Image.FromFile("../../assets/Logos/settings.png");
+            image_filtre.Image = Image.FromFile("../../assets/Logos/apps.png");
             image_filtre.Size = new Size(25, 25);
             image_filtre.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             image_filtre.Location = new Point(5, 5);
