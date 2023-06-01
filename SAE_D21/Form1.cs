@@ -45,6 +45,7 @@ namespace SAE_D21
 
         ucRechercheIngredient rechercheIng;
         ucCategorie CategoriePage;
+        String rechercheSetting = "";
 
 
         private void testClick(object sender, EventArgs e)
@@ -677,6 +678,42 @@ namespace SAE_D21
             path.AddArc(0, ((Panel)sender).Height - radius, radius, radius, 90, 90);
             path.CloseFigure();
             ((Panel)sender).Region = new Region(path);
+        }
+
+        public void StructToStr(Accueil.ucCategorie.Return @return)
+        {
+            bool first = true;
+            rechercheSetting = " WHERE = ";
+            if (@return.codeCatego.Count > 0)
+            {
+                rechercheSetting += "(";
+                foreach (int i in @return.codeCatego)
+                {
+                    if (first)
+                    {
+                        rechercheSetting += "codeRecette IN (SELECT codeRecette FROM CatégoriesRecettes WHERE codeCategorie = '" + i + "') ";
+                        first = false;
+                    }
+                    else
+                    {
+                        rechercheSetting += " OR codeRecette IN (SELECT codeRecette FROM CatégoriesRecettes WHERE codeCategorie = '" + i + "') ";
+                    }
+                }
+                rechercheSetting += ")";
+            }
+            if (first)
+            {
+                rechercheSetting += "categPrix = '" + @return.prix + "'";
+                first = false;
+            }
+            else
+            {
+                rechercheSetting += " AND categPrix = '" + @return.prix + "'";
+            }
+            if (@return.temps != 0)
+            {
+                rechercheSetting += " AND tempsCuisson = '" + @return.temps + "'";
+            }
         }
     }
 
