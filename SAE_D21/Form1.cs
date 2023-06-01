@@ -1,4 +1,5 @@
 ﻿using Accueil;
+using iTextSharp.text;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -81,7 +82,7 @@ namespace SAE_D21
 
 
             PictureBox image_filtre = new PictureBox();
-            image_filtre.Image = Image.FromFile("../../assets/Logos/apps.png");
+            image_filtre.Image = System.Drawing.Image.FromFile("../../assets/Logos/apps.png");
             image_filtre.Size = new Size(25, 25);
             image_filtre.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             image_filtre.Location = new Point(5, 5);
@@ -102,7 +103,7 @@ namespace SAE_D21
             boutton_filtre2.Controls.Add(image_filtre);
 
             PictureBox imageAccount = new PictureBox();
-            imageAccount.Image = Image.FromFile("../../assets/account/user.png");
+            imageAccount.Image = System.Drawing.Image.FromFile("../../assets/account/user.png");
             imageAccount.Size = new Size(40, 40);
             imageAccount.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             imageAccount.Location = new Point(Width - 79, 15);
@@ -217,7 +218,7 @@ namespace SAE_D21
             form1.ShowDialog();
             PictureBox pictureBox1 = new PictureBox();
             pictureBox1.Size = new Size(1080, 720);
-            pictureBox1.Image = Image.FromFile("../../assets/bg.png");
+            pictureBox1.Image = System.Drawing.Image.FromFile("../../assets/bg.png");
             
             this.Controls.Add((PictureBox) pictureBox1);
             pictureBox1.BringToFront();
@@ -240,7 +241,7 @@ namespace SAE_D21
                 {
                     if (ctr.Tag.ToString() == "user")
                     {
-                        ((PictureBox)ctr).Image = Image.FromFile("../../assets/account/userCo.png");
+                        ((PictureBox)ctr).Image = System.Drawing.Image.FromFile("../../assets/account/userCo.png");
                     }
                 }
                 foreach (Control ctr in this.Controls.OfType<Label>())
@@ -259,7 +260,7 @@ namespace SAE_D21
                 Label label = new Label();
                 label.Tag = "user";
                 label.Text = dataset.Tables["User"].Select("codeUser = " + idAccount)[0]["prenom"].ToString();
-                label.Font = new Font("Bahnschrift", 12, FontStyle.Bold);
+                label.Font = new System.Drawing.Font("Bahnschrift", 12, FontStyle.Bold);
                 label.Location = new Point(this.Width - 122, 50);
                 label.Size = new Size(128, 32);
                 label.TextAlign = ContentAlignment.MiddleCenter;
@@ -272,7 +273,7 @@ namespace SAE_D21
                 {
                     if (ctr.Tag.ToString() == "user")
                     {
-                        ((PictureBox)ctr).Image = Image.FromFile("../../assets/account/user.png");
+                        ((PictureBox)ctr).Image = System.Drawing.Image.FromFile("../../assets/account/user.png");
                     }
                 }
             }
@@ -418,7 +419,7 @@ namespace SAE_D21
                 if (folderBrowserDialog.SelectedPath != "")
                 {
                     GenerateurPDF pdf = new GenerateurPDF(folderBrowserDialog.SelectedPath + "\\Marecette.pdf");
-                    pdf.Process(dataset.Tables["recettes"].Rows[0], dataset);
+                    pdf.Process(dataset.Tables["recettes"].Rows[0], dataset, liste_de_course);
                 }
             }
         }
@@ -514,7 +515,7 @@ namespace SAE_D21
 
 
             PictureBox image_filtre = new PictureBox();
-            image_filtre.Image = Image.FromFile("../../assets/Logos/settings.png");
+            image_filtre.Image = System.Drawing.Image.FromFile("../../assets/Logos/settings.png");
             image_filtre.Size = new Size(25, 25);
             image_filtre.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             image_filtre.Location = new Point(5, 5);
@@ -679,8 +680,41 @@ namespace SAE_D21
             }
 
         }
-        public void add_Liste_Recette(object sender, EventArgs e) {
 
+
+        List<Accueil.ucIngredient.Ingredient> liste_de_course = new List<Accueil.ucIngredient.Ingredient>();
+        public void add_Liste_Recette(object sender, EventArgs e) {
+            List<Accueil.ucIngredient.Ingredient> lst = new List<ucIngredient.Ingredient>();
+            foreach(Accueil.ucIngredient.Ingredient @struct in ((FeuilleRecette)((Label)sender).Parent.Parent.Parent.Parent).ListeIng)
+            {
+                bool existe = false;
+                foreach (Accueil.ucIngredient.Ingredient element in liste_de_course)
+                {
+                    if (element.Name.Equals(@struct.Name))
+                    {
+                        existe = true;
+                        Accueil.ucIngredient.Ingredient ing = new ucIngredient.Ingredient();
+                        ing.Name = element.Name;
+                        ing.Quantiter = element.Quantiter + @struct.Quantiter;
+                        ing.uniter = element.uniter;
+                        lst.Add(ing);
+                        break;
+                    }
+                }
+                if (!existe)
+                {
+                    Accueil.ucIngredient.Ingredient ing = new ucIngredient.Ingredient();
+                    ing.Name = @struct.Name;
+                    ing.Quantiter = @struct.Quantiter;
+                    ing.uniter = @struct.uniter;
+                    lst.Add(ing);
+                }
+            }
+            liste_de_course.Clear();
+            foreach (Accueil.ucIngredient.Ingredient element in lst)
+            {
+                liste_de_course.Add(element);
+            }
         }
         private void panel_Paint(object sender, PaintEventArgs e)
         {
