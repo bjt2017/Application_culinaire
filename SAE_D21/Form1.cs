@@ -215,6 +215,14 @@ namespace SAE_D21
         {
             Login form1 = new Login(dataset);
             form1.ShowDialog();
+            PictureBox pictureBox1 = new PictureBox();
+            pictureBox1.Size = new Size(1080, 720);
+            pictureBox1.Image = Image.FromFile("../../assets/bg.png");
+            
+            this.Controls.Add((PictureBox) pictureBox1);
+            pictureBox1.BringToFront();
+            pictureBox1.BackColor = Color.Transparent;
+
             if (form1.DialogResult == DialogResult.OK)
             {
                 idAccount = form1.Id;
@@ -571,11 +579,8 @@ namespace SAE_D21
                     row = ((carteGrande)((Label)sender).Parent.Parent).drow;
                 }
             }
-            DataTable dtEtapes = new DataTable();
-            dtEtapes.TableName = "EtapesRecette";
-            dtEtapes = dataset.Tables["EtapesRecette"].Select("codeRecette = '" + row["codeRecette"] + "'").CopyToDataTable();
 
-            Accueil.FeuilleRecette f = new Accueil.FeuilleRecette(row, dtEtapes);
+            Accueil.FeuilleRecette f = new Accueil.FeuilleRecette(row, dataset,add_Liste_Recette);
             f.Location = new Point(0,0);
             this.Clear();
             this.Controls.Add(f);
@@ -674,6 +679,8 @@ namespace SAE_D21
             }
 
         }
+        public void add_Liste_Recette(object sender, EventArgs e) {
+        }
         private void panel_Paint(object sender, PaintEventArgs e)
         {
             int radius = 10; // Rayon des bords ronds
@@ -689,6 +696,9 @@ namespace SAE_D21
             path.CloseFigure();
             ((Panel)sender).Region = new Region(path);
         }
+
+        
+
 
         public void StructToStr(Accueil.ucCategorie.Return @return)
         {
