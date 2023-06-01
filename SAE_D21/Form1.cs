@@ -434,7 +434,7 @@ namespace SAE_D21
                     break;
                 }
                 
-                command = "SELECT * FROM recettes WHERE codeRecette IN(SELECT codeRecette FROM IngrédientsRecette WHERE codeIngredient = " + ingredient["codeIngredient"] + ")";
+                command = "SELECT * FROM recettes WHERE codeRecette IN(SELECT codeRecette FROM IngrédientsRecette WHERE codeIngredient = " + ingredient["codeIngredient"] + ")" + rechercheSetting;
                 cmd.CommandText = command;
                 OleDbDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
@@ -632,7 +632,8 @@ namespace SAE_D21
         public void Click_Recherche_Categorie(object sender, EventArgs e)
         {
             Accueil.ucCategorie.Return @return = ((ucCategorie)((Label)sender).Parent.Parent.Parent).Requete;
-
+            StructToStr(@return);
+            MessageBox.Show("Requete: " + rechercheSetting);
         }
 
         public void Recherche_Ingredient(object sender, EventArgs e)
@@ -691,37 +692,28 @@ namespace SAE_D21
 
         public void StructToStr(Accueil.ucCategorie.Return @return)
         {
+            rechercheSetting = "";
             bool first = true;
-            rechercheSetting = " WHERE = ";
             if (@return.codeCatego.Count > 0)
             {
-                rechercheSetting += "(";
                 foreach (int i in @return.codeCatego)
                 {
                     if (first)
                     {
-                        rechercheSetting += "codeRecette IN (SELECT codeRecette FROM CatégoriesRecettes WHERE codeCategorie = '" + i + "') ";
+                        rechercheSetting += " AND (codeRecette IN (SELECT codeRecette FROM CatégoriesRecette WHERE codeCategorie = " + i + ") ";
                         first = false;
                     }
                     else
                     {
-                        rechercheSetting += " OR codeRecette IN (SELECT codeRecette FROM CatégoriesRecettes WHERE codeCategorie = '" + i + "') ";
+                        rechercheSetting += " OR codeRecette IN (SELECT codeRecette FROM CatégoriesRecette WHERE codeCategorie = " + i + ") ";
                     }
                 }
                 rechercheSetting += ")";
             }
-            if (first)
-            {
-                rechercheSetting += "categPrix = '" + @return.prix + "'";
-                first = false;
-            }
-            else
-            {
-                rechercheSetting += " AND categPrix = '" + @return.prix + "'";
-            }
+            rechercheSetting += " AND categPrix <= " + @return.prix;
             if (@return.temps != 0)
             {
-                rechercheSetting += " AND tempsCuisson = '" + @return.temps + "'";
+                rechercheSetting += " AND tempsCuisson <= " + @return.temps;
             }
         }
     }
