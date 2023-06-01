@@ -410,7 +410,7 @@ namespace SAE_D21
                 if (folderBrowserDialog.SelectedPath != "")
                 {
                     GenerateurPDF pdf = new GenerateurPDF(folderBrowserDialog.SelectedPath + "\\Marecette.pdf");
-                    pdf.Process(dataset.Tables["recettes"].Rows[0]);
+                    pdf.Process(dataset.Tables["recettes"].Rows[0], dataset);
                 }
             }
         }
