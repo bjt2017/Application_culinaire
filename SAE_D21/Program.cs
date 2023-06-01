@@ -16,6 +16,7 @@ namespace SAE_D21
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            
             Application.Run(new AppFrigo());
         }
     }
