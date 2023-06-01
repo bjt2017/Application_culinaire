@@ -40,7 +40,7 @@ namespace SAE_D21
             this.Controls.Add(button);
 
             rechercheIng = new ucRechercheIngredient(dataset.Tables["Famille"], dataset.Tables["ingrédients"], Recherche_Ingredient);
-            CategoriePage = new ucCategorie(dataset.Tables["Catégories"]);
+            CategoriePage = new ucCategorie(dataset.Tables["Catégories"], Click_Recherche_Categorie);
         }
 
         ucRechercheIngredient rechercheIng;
@@ -322,7 +322,7 @@ namespace SAE_D21
             return carte;
         }
 
-
+        
 
         private void rechercher(System.Windows.Forms.TextBox searchbar)
         {
@@ -622,6 +622,12 @@ namespace SAE_D21
                 select = 5;
             }
             
+
+        }
+
+        public void Click_Recherche_Categorie(object sender, EventArgs e)
+        {
+            Accueil.ucCategorie.Return @return = ((ucCategorie)((Label)sender).Parent.Parent.Parent).Requete;
 
         }
 
