@@ -680,6 +680,7 @@ namespace SAE_D21
 
         }
         public void add_Liste_Recette(object sender, EventArgs e) {
+
         }
         private void panel_Paint(object sender, PaintEventArgs e)
         {
