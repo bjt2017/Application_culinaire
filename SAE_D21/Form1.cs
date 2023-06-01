@@ -17,17 +17,20 @@ namespace SAE_D21
             InitializeComponent();
         }
 
+        ucBarre barre;
         private void AppCuisine_Load(object sender, EventArgs e)
         {
             this.loadDataset();
-            this.loadmenu();
+            
             folderBrowserDialog.SelectedPath = "C:\\Users\\arnaudmichel\\source\\repos\\SAE_D21\\SAE_D21\\pdfRecettes";
 
-            ucBarre barre = new ucBarre();
+            barre = new ucBarre();
             barre.SetClick_Home(this.Click_Home);
             barre.SetClick_Categorie(this.Click_Categorie);
+            barre.SetClick_Filtre(this.Click_Recherche_Ingredient);
             barre.Location = new Point(0, 642);
             this.Controls.Add(barre);
+            this.loadmenu();
 
             Button button = new Button();
             button.Text = "Ajouter une recette";
@@ -84,6 +87,13 @@ namespace SAE_D21
 
             boutton_filtre2.Click += Click_Recherche_Ingredient;
             image_filtre.Click += Click_Recherche_Ingredient;
+
+            boutton_filtre2.Click += barre.Click_filtre;
+            image_filtre.Click += barre.Click_filtre;
+
+
+
+
 
             this.Controls.Add(boutton_filtre);
 
@@ -604,14 +614,14 @@ namespace SAE_D21
         private int select = 1;
         public void Click_Recherche_Ingredient(object sender, EventArgs e)
         {
+            if (select != 5)
+            {
+                this.Clear();
 
-            this.Clear();
-
-
+                this.Controls.Add(rechercheIng);
+                select = 5;
+            }
             
-
-            this.Controls.Add(rechercheIng);
-            select = -1;
 
         }
 
