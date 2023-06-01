@@ -27,7 +27,7 @@ namespace SAE_D21
             this.outFilePath = outFilePath;
         }
 
-        public void Process(DataRow dr, DataSet ds)
+        public void Process(DataRow dr, DataSet ds, List<Accueil.ucIngredient.Ingredient> ingredients)
         {
             // Create a new PDF document
             iTextSharp.text.Document document = new iTextSharp.text.Document();
@@ -104,6 +104,25 @@ namespace SAE_D21
                 paragraph.Alignment = Element.ALIGN_CENTER;
                 paragraph.Font = FontFactory.GetFont(FontFactory.HELVETICA, 12f);
                 document.Add(paragraph);
+
+                if (ingredients.Count > 0)
+                {
+                    // Ajout d'un paragraphe
+                    paragraph = new Paragraph("Votre liste de course: ");
+                    paragraph.Alignment = Element.ALIGN_JUSTIFIED;
+                    paragraph.Font = FontFactory.GetFont(FontFactory.HELVETICA, 12f);
+                    document.Add(paragraph);
+
+                    // Ajout d'une liste
+                    list = new List(List.UNORDERED);
+                    list.IndentationLeft = 30f;
+                    foreach (Accueil.ucIngredient.Ingredient ingredient in ingredients)
+                    {
+                        list.Add(ingredient.Name + ": " + ingredient.Quantiter + " " + ingredient.uniter);
+                    }
+
+                    document.Add(list);
+                }
 
                 // Ajout d'un paragraphe
                 paragraph = new Paragraph("Bon appétit!");
