@@ -571,8 +571,11 @@ namespace SAE_D21
                     row = ((carteGrande)((Label)sender).Parent.Parent).drow;
                 }
             }
+            DataTable dtEtapes = new DataTable();
+            dtEtapes.TableName = "EtapesRecette";
+            dtEtapes = dataset.Tables["EtapesRecette"].Select("codeRecette = '" + row["codeRecette"] + "'").CopyToDataTable();
 
-            Accueil.FeuilleRecette f = new Accueil.FeuilleRecette(row);
+            Accueil.FeuilleRecette f = new Accueil.FeuilleRecette(row, dtEtapes);
             f.Location = new Point(0,0);
             this.Clear();
             this.Controls.Add(f);
