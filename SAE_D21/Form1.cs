@@ -383,7 +383,7 @@ namespace SAE_D21
                     adapter.Fill(dt);
                     if (dt.Rows.Count == 0)
                     {
-                        errorProvider.SetError(searchbar.Parent.Parent, "L'ingrédient " + ingredients[i] + " n'  existe pas");
+                        errorProvider.SetError(searchbar.Parent.Parent, "L'ingrédient " + ingredients[i] + " n'existe pas");
                         searchbar.Parent.Parent.BackColor = Color.IndianRed;
                         searchbar.ForeColor = Color.IndianRed;
                         ingredients = new string[3];
@@ -496,6 +496,19 @@ namespace SAE_D21
                 pnl.Controls.Add(carte);
             }
             select = -1;
+
+            if (recettes.Count == 0)
+            {
+                MessageBox.Show("Il y a " + recettes.Count + " recettes qui correspondent à votre recherche");
+                Label label = new Label();
+                label.Size = new System.Drawing.Size(500, 42);
+                label.Text = "Aucune recette ne correspond à votre recherche";
+                label.Font = new System.Drawing.Font("Bahnschrift", 16, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+                label.Location = new Point((this.Width) / 2 - (label.Width) / 2, 300);
+                label.TextAlign = ContentAlignment.MiddleCenter;
+                this.Controls.Add(label);
+                label.BringToFront();
+            }
             
 
             Accueil.BarDeRecherche barDeRecherche1 = new Accueil.BarDeRecherche();
@@ -667,8 +680,11 @@ namespace SAE_D21
             if (select != 1)
             {
                 this.Clear();
-
-                this.loadmenu();
+                foreach (BarDeRecherche Bdr in menu.Controls.OfType<BarDeRecherche>())
+                {
+                    Bdr.Text = "Rechercher (ex:Pomme, banane...)";
+                }
+                this.Controls.Add(menu);
                 select = 1;
             }
 
