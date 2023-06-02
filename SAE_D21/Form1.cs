@@ -18,6 +18,8 @@ namespace SAE_D21
             InitializeComponent();
         }
 
+        Panel menu = new Panel();
+
         ucBarre barre;
         private void AppCuisine_Load(object sender, EventArgs e)
         {
@@ -31,7 +33,6 @@ namespace SAE_D21
             barre.SetClick_Filtre(this.Click_Recherche_Ingredient);
             barre.Location = new Point(0, 642);
             this.Controls.Add(barre);
-            this.loadmenu();
 
             Button button = new Button();
             button.Text = "Ajouter une recette";
@@ -42,6 +43,11 @@ namespace SAE_D21
 
             rechercheIng = new ucRechercheIngredient(dataset.Tables["Famille"], dataset.Tables["ingrédients"], Recherche_Ingredient);
             CategoriePage = new ucCategorie(dataset.Tables["Catégories"], Click_Recherche_Categorie);
+            menu.Size = new Size(1080, 720);
+            menu.Location = new Point(0, 0);
+            menu.BackColor = Color.FromArgb(255, 255, 255);
+            this.loadmenu();
+            this.Controls.Add(menu);
         }
 
         ucRechercheIngredient rechercheIng;
@@ -97,7 +103,7 @@ namespace SAE_D21
 
 
 
-            this.Controls.Add(boutton_filtre);
+            menu.Controls.Add(boutton_filtre);
 
             boutton_filtre.Controls.Add(boutton_filtre2);
             boutton_filtre2.Controls.Add(image_filtre);
@@ -109,7 +115,7 @@ namespace SAE_D21
             imageAccount.Location = new Point(Width - 79, 15);
             imageAccount.Tag = "user";
             imageAccount.Click += user_Click;
-            this.Controls.Add(imageAccount);
+            menu.Controls.Add(imageAccount);
 
             setImageAccount();
 
@@ -127,15 +133,15 @@ namespace SAE_D21
             Titre2.Font = new System.Drawing.Font("Bahnschrift", 16, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
             Titre2.Location = new Point((this.Width) / 2 - (Titre2.Width) / 2 - 15, 140);
             Titre2.TextAlign = ContentAlignment.MiddleCenter;
-            this.Controls.Add(Titre); this.Controls.Add(Titre2);
+            menu.Controls.Add(Titre); this.Controls.Add(Titre2);
 
             Panel panel = new Panel();
             panel.BackColor = Color.FromArgb(255, 0, 0, 0);
             panel.Width = 896;
             panel.Height = 2;
             panel.Location = new Point((this.Width) / 2 - (panel.Width) / 2, 160);
-            this.Controls.Add(panel);
-            this.Controls.Add(barDeRecherche1);
+            menu.Controls.Add(panel);
+            menu.Controls.Add(barDeRecherche1);
             DataTable dtUnselected = dataset.Tables["Recettes"].Copy();
             for (int i = 0; i < 2; i++)
             {
@@ -166,7 +172,7 @@ namespace SAE_D21
                     }
                     ucCarte.Location = new Point(25 + j * ucCarte.Width + decale_x, 430 + i * ucCarte.Height + decale_y);
                     ucCarte.setClick(carteGrande_Click);
-                    this.Controls.Add(ucCarte);
+                    menu.Controls.Add(ucCarte);
                 }
 
             }
@@ -175,7 +181,7 @@ namespace SAE_D21
             panel2.Width = 1000; 
             panel2.Height = 1;
             panel2.Location = new Point((this.Width) / 2 - (panel2.Width) / 2 - 5, 405);
-            this.Controls.Add(panel2);
+            menu.Controls.Add(panel2);
 
             for (int i = 0; i < 5; i++)
             {
@@ -196,7 +202,7 @@ namespace SAE_D21
                 {
 
                 }
-                this.Controls.Add(carteGrande);
+                menu.Controls.Add(carteGrande);
             }
 
         }
@@ -639,7 +645,6 @@ namespace SAE_D21
         {
             Accueil.ucCategorie.Return @return = ((ucCategorie)((Label)sender).Parent.Parent.Parent).Requete;
             StructToStr(@return);
-            MessageBox.Show("Requete: " + rechercheSetting);
         }
 
         public void Recherche_Ingredient(object sender, EventArgs e)
