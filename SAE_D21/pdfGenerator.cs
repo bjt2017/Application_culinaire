@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace SAE_D21
 {
@@ -32,7 +33,6 @@ namespace SAE_D21
             // Create a new PDF document
             iTextSharp.text.Document document = new iTextSharp.text.Document();
             Document doc = new Document();
-            System.Console.WriteLine(this.outFilePath);
             try
             {
                 PdfWriter pdfWriter = PdfWriter.GetInstance(document, new System.IO.FileStream(outFilePath, System.IO.FileMode.Create));
@@ -141,6 +141,60 @@ namespace SAE_D21
             {
                 // Close the document
                 document.Close();
+            }
+        }
+        public void GenererListeCourse(DataSet ds, List<Accueil.ucIngredient.Ingredient> ingredients)
+        {
+            iTextSharp.text.Document document = new iTextSharp.text.Document();
+            Document doc = new Document();
+            String name;
+            try
+            {
+                PdfWriter pdfWriter = PdfWriter.GetInstance(document, new System.IO.FileStream(outFilePath, System.IO.FileMode.Create));
+                document.Open();
+
+                Paragraph title = new Paragraph("Liste de course");
+                title.Alignment = Element.ALIGN_CENTER;
+                title.Font = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 24f);
+                document.Add(title);
+
+                // Ajout d'un sous-titre
+                Paragraph subtitle = new Paragraph("Une recette Cuisinatout");
+                subtitle.Alignment = Element.ALIGN_CENTER;
+                subtitle.Font = FontFactory.GetFont(FontFactory.HELVETICA, 16f);
+                document.Add(subtitle);
+
+                for (int i = 0; i < ds.Tables["Famille"].Rows.Count; i++)
+                {
+
+                    List list = new List(List.UNORDERED);
+                    list.IndentationLeft = 30f;
+                    foreach (Accueil.ucIngredient.Ingredient ingredient in ingredients)
+                    {
+                        name = ingredient.Name.Clone().ToString();
+                        // Si la chaine contient un ' alors on le remplace par un '' pour que la requete SQL fonctionne
+                        if (name.Contains("'"))
+                        {
+                            name = name.Replace("'", "''");
+                        }
+                        if (ds.Tables["Ingrédients"].Select("libIngredient = '" + name + "'")[0]["codeFamille"].ToString() == ds.Tables["Famille"].Rows[i]["codeFamille"].ToString())
+                        {
+                            list.Add(ingredient.Name + ": " + ingredient.Quantiter + " " + ingredient.uniter);
+                        }
+                    }
+                    if (list.Items.Count > 0)
+                    {
+                        title = new Paragraph("Rayon " + ds.Tables["Famille"].Rows[i]["libFamille"].ToString());
+                        title.Alignment = Element.ALIGN_LEFT;
+                        title.Font = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 24f);
+                        document.Add(title);
+                    }
+                    document.Add(list);
+                }
+                document.Close();
+            }catch(Exception ex)
+            {
+                throw ex;
             }
         }
     }

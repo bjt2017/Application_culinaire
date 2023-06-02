@@ -376,6 +376,11 @@ namespace SAE_D21
                 errorProvider.Clear();
                 for (int i = 0; i < ingredients.Length; i++)
                 {
+                    // Si l'ingrédient contient ' alors on le remplace par '' pour que la requete fonctionne
+                    if (ingredients[i].Contains("'"))
+                    {
+                        ingredients[i] = ingredients[i].Replace("'", "''");
+                    }
                     command = "SELECT * FROM Ingrédients WHERE libIngredient = '" + ingredients[i] + "'";
                     cmd = new OleDbCommand(command, con);
                     DataTable dt = new DataTable();
@@ -426,6 +431,15 @@ namespace SAE_D21
                 {
                     GenerateurPDF pdf = new GenerateurPDF(folderBrowserDialog.SelectedPath + "\\Marecette.pdf");
                     pdf.Process(dataset.Tables["recettes"].Rows[0], dataset, liste_de_course);
+                }
+            }
+            else if (e.KeyChar == (char)Keys.F)
+            {
+                folderBrowserDialog.ShowDialog();
+                if (folderBrowserDialog.SelectedPath != "")
+                {
+                    GenerateurPDF pdf = new GenerateurPDF(folderBrowserDialog.SelectedPath + "\\MesCourses.pdf");
+                    pdf.GenererListeCourse(dataset, liste_de_course);
                 }
             }
         }
@@ -499,7 +513,6 @@ namespace SAE_D21
 
             if (recettes.Count == 0)
             {
-                MessageBox.Show("Il y a " + recettes.Count + " recettes qui correspondent à votre recherche");
                 Label label = new Label();
                 label.Size = new System.Drawing.Size(500, 42);
                 label.Text = "Aucune recette ne correspond à votre recherche";
