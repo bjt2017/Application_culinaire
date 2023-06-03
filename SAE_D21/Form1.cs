@@ -390,6 +390,11 @@ namespace SAE_D21
             con.Close();
         }
 
+        public void Click_SignUp(object sender, EventHandler e)
+        {
+
+        }
+
         // Load dataset
         private void loadDataset()
         {
