@@ -1,5 +1,4 @@
 ﻿using Accueil;
-using iTextSharp.text;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -24,13 +23,14 @@ namespace SAE_D21
         private void AppCuisine_Load(object sender, EventArgs e)
         {
             this.loadDataset();
-            
+
             folderBrowserDialog.SelectedPath = "C:\\Users\\arnaudmichel\\source\\repos\\SAE_D21\\SAE_D21\\pdfRecettes";
 
             barre = new ucBarre();
             barre.SetClick_Home(this.Click_Home);
             barre.SetClick_Categorie(this.Click_Categorie);
             barre.SetClick_Filtre(this.Click_Recherche_Ingredient);
+            barre.SetClick_Like(this.Click_Like);
             barre.Location = new Point(0, 642);
             this.Controls.Add(barre);
 
@@ -62,7 +62,7 @@ namespace SAE_D21
 
         private int idAccount = -1;
         Random rnd = new Random();
-        
+
 
         private void loadmenu()
         {
@@ -98,9 +98,6 @@ namespace SAE_D21
 
             boutton_filtre2.Click += barre.Click_filtre;
             image_filtre.Click += barre.Click_filtre;
-
-
-
 
 
             menu.Controls.Add(boutton_filtre);
@@ -172,13 +169,14 @@ namespace SAE_D21
                     }
                     ucCarte.Location = new Point(25 + j * ucCarte.Width + decale_x, 430 + i * ucCarte.Height + decale_y);
                     ucCarte.setClick(carteGrande_Click);
+                    ucCarte.set_click_like(like_Click);
                     menu.Controls.Add(ucCarte);
                 }
 
             }
             Panel panel2 = new Panel();
             panel2.BackColor = Color.FromArgb(255, 128, 128, 128);
-            panel2.Width = 1000; 
+            panel2.Width = 1000;
             panel2.Height = 1;
             panel2.Location = new Point((this.Width) / 2 - (panel2.Width) / 2 - 5, 405);
             menu.Controls.Add(panel2);
@@ -202,6 +200,7 @@ namespace SAE_D21
                 {
 
                 }
+                carteGrande.set_click_like(like_Click);
                 menu.Controls.Add(carteGrande);
             }
 
@@ -225,16 +224,48 @@ namespace SAE_D21
             PictureBox pictureBox1 = new PictureBox();
             pictureBox1.Size = new Size(1080, 720);
             pictureBox1.Image = System.Drawing.Image.FromFile("../../assets/bg.png");
-            
-            this.Controls.Add((PictureBox) pictureBox1);
+
+            this.Controls.Add((PictureBox)pictureBox1);
             pictureBox1.BringToFront();
             pictureBox1.BackColor = Color.Transparent;
 
             if (form1.DialogResult == DialogResult.OK)
             {
+                foreach (ucCarte carte in menu.Controls.OfType<ucCarte>())
+                {
+                    carte.isLiked = false;
+                }
+                foreach (carteGrande carte in menu.Controls.OfType<carteGrande>())
+                {
+                    carte.isLiked = false;
+                }
                 idAccount = form1.Id;
                 setImageAccount();
-                
+                foreach (ucCarte carte in menu.Controls.OfType<ucCarte>())
+                {
+                    try
+                    {
+                        MessageBox.Show(dataset.Tables["UserRecette"].Select("codeRecette = " + carte.drow["codeRecette"])[0]["codeUser"].ToString() + " " + idAccount.ToString());
+                        if (dataset.Tables["UserRecette"].Select("codeRecette = " + carte.drow["codeRecette"])[0]["codeUser"].ToString() == idAccount.ToString())
+                        {
+                            carte.isLiked = true;
+                        }
+                    }
+                    catch (Exception ex) { }
+                }
+                foreach (carteGrande carte in menu.Controls.OfType<carteGrande>())
+                {
+                    try
+                    {
+                        if (dataset.Tables["UserRecette"].Select("codeRecette = " + carte.drow["codeRecette"])[0]["codeUser"].ToString() == idAccount.ToString())
+                        {
+                            carte.isLiked = true;
+                        }
+                    }
+                    catch (Exception ex) { }
+                }
+
+
             }
             //this.Close();
         }
@@ -243,22 +274,23 @@ namespace SAE_D21
         {
             if (idAccount > 0)
             {
-                foreach (Control ctr in this.Controls.OfType<PictureBox>())
+                foreach (Control ctr in menu.Controls.OfType<PictureBox>())
                 {
                     if (ctr.Tag.ToString() == "user")
                     {
                         ((PictureBox)ctr).Image = System.Drawing.Image.FromFile("../../assets/account/userCo.png");
                     }
                 }
-                foreach (Control ctr in this.Controls.OfType<Label>())
+                foreach (Control ctr in menu.Controls.OfType<Label>())
                 {
                     try
                     {
                         if (ctr.Tag != null && ctr.Tag.ToString() == "user")
                         {
-                            this.Controls.Remove(ctr);
+                            menu.Controls.Remove(ctr);
                         }
-                    }catch (Exception)
+                    }
+                    catch (Exception)
                     {
 
                     }
@@ -271,11 +303,11 @@ namespace SAE_D21
                 label.Size = new Size(128, 32);
                 label.TextAlign = ContentAlignment.MiddleCenter;
                 label.AutoSize = false;
-                this.Controls.Add(label);
+                menu.Controls.Add(label);
             }
             else
             {
-                foreach (Control ctr in this.Controls.OfType<PictureBox>())
+                foreach (Control ctr in menu.Controls.OfType<PictureBox>())
                 {
                     if (ctr.Tag.ToString() == "user")
                     {
@@ -283,6 +315,79 @@ namespace SAE_D21
                     }
                 }
             }
+            this.Clear();
+            this.Controls.Add(menu);
+        }
+
+        private void like_Click(Object sender, EventArgs e)
+        {
+            con.Open();
+            String commande = "";
+            int i = 0;
+            if (((PictureBox)sender).Parent.Parent is ucCarte)
+            {
+                if ((((ucCarte)((PictureBox)sender).Parent.Parent)).isLiked)
+                {
+                    commande = "INSERT INTO UserRecette VALUES(" + idAccount + ", " + (((ucCarte)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + ", 5, '')";
+                    DataRow dr = dataset.Tables["UserRecette"].NewRow();
+                    dr["codeUser"] = idAccount;
+                    dr["codeRecette"] = (((ucCarte)((PictureBox)sender).Parent.Parent)).drow["codeRecette"];
+                    dataset.Tables["UserRecette"].Rows.Add(dr);
+                    dataset.Tables["UserRecette"].AcceptChanges();
+                }
+                else
+                {
+                    commande = "DELETE FROM UserRecette WHERE codeRecette = " + (((ucCarte)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + " AND codeUser = " + idAccount; ;
+                    dataset.Tables["UserRecette"].Rows.Remove(dataset.Tables["UserRecette"].Select("codeRecette = " + (((ucCarte)((PictureBox)sender).Parent.Parent)).drow["codeRecette"])[0]);
+                    dataset.AcceptChanges();
+                }
+            }
+            else if (((PictureBox)sender).Parent.Parent is ucCarteEtoile)
+            {
+                if ((((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).isLiked)
+                {
+                    commande = "INSERT INTO UserRecettes value(" + idAccount + ", " + (((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + ")";
+                }
+                else
+                {
+                    commande = "DELETE FROM UserRecette WHERE codeRecetre = " + (((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + " AND codeUser = " + idAccount;
+                }
+            }
+            else if (((PictureBox)sender).Parent.Parent is carteGrande)
+            {
+                if ((((carteGrande)((PictureBox)sender).Parent.Parent)).isLiked)
+                {
+                    commande = "INSERT INTO UserRecettes value(" + idAccount + ", " + (((carteGrande)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + ")";
+                }
+                else
+                {
+                    commande = "DELETE FROM UserRecette WHERE codeRecetre = " + (((carteGrande)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + " AND codeUser = " + idAccount;
+                }
+            }
+
+            OleDbTransaction oleDbTransaction = con.BeginTransaction();
+            try
+            {
+                // Assigner la transaction à la commande
+                OleDbCommand command = new OleDbCommand(commande, con);
+                command.Transaction = oleDbTransaction;
+
+                // Effectuer vos modifications ici avec la commande
+
+                // Exécuter la commande
+                command.ExecuteNonQuery();
+
+                // Commit de la transaction
+                oleDbTransaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                // Gérer les erreurs
+                MessageBox.Show(commande);
+                MessageBox.Show(ex.Message);
+                //throw new Exception(ex.Message);
+            }
+            con.Close();
         }
 
         // Load dataset
@@ -338,7 +443,7 @@ namespace SAE_D21
             return carte;
         }
 
-        
+
 
         private void rechercher(System.Windows.Forms.TextBox searchbar)
         {
@@ -346,7 +451,7 @@ namespace SAE_D21
             {
                 con.Open();
             }
-            
+
             //===== Mode Connecté =====
             // Remov all the uccarte on the screen
             recettes.Clear();
@@ -355,7 +460,7 @@ namespace SAE_D21
 
             String command;
             OleDbCommand cmd;
-            OleDbDataAdapter adapter ;
+            OleDbDataAdapter adapter;
 
 
             String Texte = searchbar.Text.Trim().ToLower().Replace(", ", ",");
@@ -462,14 +567,14 @@ namespace SAE_D21
                 {
                     break;
                 }
-                
+
                 command = "SELECT * FROM recettes WHERE codeRecette IN(SELECT codeRecette FROM IngrédientsRecette WHERE codeIngredient = " + ingredient["codeIngredient"] + ")" + rechercheSetting;
                 cmd.CommandText = command;
                 OleDbDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
                     if (!recettes.Contains(dataset.Tables["recettes"].Select("codeRecette = " + reader["codeRecette"])[0]))
-                    recettes.Add(dataset.Tables["recettes"].Select("codeRecette = " + reader["codeRecette"])[0]);
+                        recettes.Add(dataset.Tables["recettes"].Select("codeRecette = " + reader["codeRecette"])[0]);
                 }
                 reader.Close();
             }
@@ -506,7 +611,7 @@ namespace SAE_D21
             for (int i = 0; i < recettes.Count; i++)
             {
                 DataRow row = recettes[i];
-                ucCarteEtoile carte = this.createCarteStars(row, 50 + (i% 3) * 330, 0 + (i/3) * 100);
+                ucCarteEtoile carte = this.createCarteStars(row, 50 + (i % 3) * 330, 0 + (i / 3) * 100);
                 pnl.Controls.Add(carte);
             }
             select = -1;
@@ -522,7 +627,7 @@ namespace SAE_D21
                 this.Controls.Add(label);
                 label.BringToFront();
             }
-            
+
 
             Accueil.BarDeRecherche barDeRecherche1 = new Accueil.BarDeRecherche();
             barDeRecherche1.textBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.barDeRecherche1_KeyPress);
@@ -613,8 +718,8 @@ namespace SAE_D21
                 }
             }
 
-            Accueil.FeuilleRecette f = new Accueil.FeuilleRecette(row, dataset,add_Liste_Recette);
-            f.Location = new Point(0,0);
+            Accueil.FeuilleRecette f = new Accueil.FeuilleRecette(row, dataset, add_Liste_Recette);
+            f.Location = new Point(0, 0);
             this.Clear();
             this.Controls.Add(f);
             select = -1;
@@ -626,7 +731,7 @@ namespace SAE_D21
             {
                 foreach (Control c in this.Controls)
                 {
-                   
+
                     if (!(c is ucBarre))
                     {
                         this.Controls.Remove(c);
@@ -641,7 +746,7 @@ namespace SAE_D21
             {
                 foreach (Control c in this.Controls)
                 {
-                    
+
                     if (!(c is ucBarre || c is BarDeRecherche))
                     {
                         this.Controls.Remove(c);
@@ -663,7 +768,7 @@ namespace SAE_D21
                 this.Controls.Add(rechercheIng);
                 select = 5;
             }
-            
+
 
         }
 
@@ -676,7 +781,7 @@ namespace SAE_D21
         public void Recherche_Ingredient(object sender, EventArgs e)
         {
             ucRechercheIngredient ri;
-            if(sender is Panel)
+            if (sender is Panel)
             {
                 ri = ((Panel)sender).Parent.Parent as ucRechercheIngredient;
             }
@@ -708,18 +813,56 @@ namespace SAE_D21
             if (select != 2)
             {
                 this.Clear();
-                
+
                 this.Controls.Add(CategoriePage);
                 select = 2;
             }
 
         }
 
+        public void Click_Like(object sender, EventArgs e)
+        {
+            if (select != 3)
+            {
+                this.Clear();
+                Panel panel = new Panel();
+                panel.BackColor = Color.FromArgb(255, 0, 0, 0);
+                panel.Width = 896;
+                panel.Height = 2;
+                panel.Location = new Point((this.Width) / 2 - (panel.Width) / 2, 160);
+                this.Controls.Add(panel);
+
+                for (int i = 0; i < dataset.Tables["UserRecette"].Rows.Count; i++)
+                {
+                    if (dataset.Tables["UserRecette"].Rows[i]["codeUser"].ToString() == idAccount.ToString())
+                    {
+                        DataRow row = dataset.Tables["Recettes"].Select("codeRecette = " + dataset.Tables["UserRecette"].Rows[i]["codeRecette"])[0];
+                        ucCarteEtoile carte = this.createCarteStars(row, 50 + (i % 3) * 330, 0 + (i / 3) * 100);
+                        this.Controls.Add(carte);
+                    }
+                }
+                select = -1;
+
+                if (dataset.Tables["UserRecette"].Rows.Count == 0)
+                {
+                    Label label = new Label();
+                    label.Size = new System.Drawing.Size(500, 42);
+                    label.Text = "Aucune recette ne correspond à votre recherche";
+                    label.Font = new System.Drawing.Font("Bahnschrift", 16, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+                    label.Location = new Point((this.Width) / 2 - (label.Width) / 2, 300);
+                    label.TextAlign = ContentAlignment.MiddleCenter;
+                    this.Controls.Add(label);
+                    label.BringToFront();
+                }
+            }
+        }
+
 
         List<Accueil.ucIngredient.Ingredient> liste_de_course = new List<Accueil.ucIngredient.Ingredient>();
-        public void add_Liste_Recette(object sender, EventArgs e) {
+        public void add_Liste_Recette(object sender, EventArgs e)
+        {
             List<Accueil.ucIngredient.Ingredient> lst = new List<ucIngredient.Ingredient>();
-            foreach(Accueil.ucIngredient.Ingredient @struct in ((FeuilleRecette)((Label)sender).Parent.Parent.Parent.Parent).ListeIng)
+            foreach (Accueil.ucIngredient.Ingredient @struct in ((FeuilleRecette)((Label)sender).Parent.Parent.Parent.Parent).ListeIng)
             {
                 bool existe = false;
                 foreach (Accueil.ucIngredient.Ingredient element in liste_de_course)
@@ -766,7 +909,7 @@ namespace SAE_D21
             ((Panel)sender).Region = new Region(path);
         }
 
-        
+
 
 
         public void StructToStr(Accueil.ucCategorie.Return @return)
