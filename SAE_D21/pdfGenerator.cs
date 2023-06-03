@@ -3,10 +3,6 @@ using iTextSharp.text.pdf;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace SAE_D21
 {
@@ -18,10 +14,12 @@ namespace SAE_D21
             if (outFilePath == null)
             {
                 throw new Exception("outFilePath cannot be null");
-            }else if (outFilePath == "")
+            }
+            else if (outFilePath == "")
             {
                 throw new Exception("outFilePath cannot be empty");
-            }else if (!outFilePath.EndsWith(".pdf"))
+            }
+            else if (!outFilePath.EndsWith(".pdf"))
             {
                 outFilePath += ".pdf";
             }
@@ -76,7 +74,7 @@ namespace SAE_D21
                 paragraph.Alignment = Element.ALIGN_CENTER;
                 paragraph.Font = FontFactory.GetFont(FontFactory.HELVETICA, 12f);
                 document.Add(paragraph);
-                    
+
                 paragraph = new Paragraph("Préparation: ");
                 paragraph.Alignment = Element.ALIGN_JUSTIFIED;
                 paragraph.Font = FontFactory.GetFont(FontFactory.HELVETICA, 12f);
@@ -192,7 +190,8 @@ namespace SAE_D21
                     document.Add(list);
                 }
                 document.Close();
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
