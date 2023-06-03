@@ -31,6 +31,7 @@ namespace SAE_D21
             barre.SetClick_Home(this.Click_Home);
             barre.SetClick_Categorie(this.Click_Categorie);
             barre.SetClick_Filtre(this.Click_Recherche_Ingredient);
+            barre.SetClick_Like(this.Click_Like);
             barre.Location = new Point(0, 642);
             this.Controls.Add(barre);
 
@@ -802,13 +803,16 @@ namespace SAE_D21
 
                 for (int  i = 0; i < dataset.Tables["UserRecette"].Rows.Count; i++)
                 {
-                    DataRow row = dataset.Tables["UserRecette"].Rows[i];
-                    ucCarteEtoile carte = this.createCarteStars(row, 50 + (i % 3) * 330, 0 + (i / 3) * 100);
-                    this.Controls.Add(carte);
+                    if (dataset.Tables["UserRecette"].Rows[i]["codeUser"].ToString() == idAccount.ToString())
+                    {
+                        DataRow row = dataset.Tables["Recettes"].Select("codeRecette = " + dataset.Tables["UserRecette"].Rows[i]["codeRecette"])[0];
+                        ucCarteEtoile carte = this.createCarteStars(row, 50 + (i % 3) * 330, 0 + (i / 3) * 100);
+                        this.Controls.Add(carte);
+                    }
                 }
                 select = -1;
 
-                if (recettes.Count == 0)
+                if (dataset.Tables["UserRecette"].Rows.Count == 0)
                 {
                     Label label = new Label();
                     label.Size = new System.Drawing.Size(500, 42);
