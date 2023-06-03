@@ -225,7 +225,7 @@ namespace SAE_D21
             this.Controls.Add(pictureBox);
             pictureBox.BringToFront();
 
-            ucLogIn ucLogIn = new ucLogIn();
+            ucLogIn ucLogIn = new ucLogIn(); //ucLogIn(dataset, con);
             ucLogIn.Location = new Point(this.Width/2 - ucLogIn.Width/2, this.Height/2 - ucLogIn.Height/2);
             this.Controls.Add(ucLogIn);
             ucLogIn.BringToFront();
@@ -306,22 +306,36 @@ namespace SAE_D21
             {
                 if ((((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).isLiked)
                 {
-                    commande = "INSERT INTO UserRecettes value(" + idAccount + ", " + (((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + ")";
+                    commande = "INSERT INTO UserRecette VALUES(" + idAccount + ", " + (((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + ", 5, '')";
+                    DataRow dr = dataset.Tables["UserRecette"].NewRow();
+                    dr["codeUser"] = idAccount;
+                    dr["codeRecette"] = (((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).drow["codeRecette"];
+                    dataset.Tables["UserRecette"].Rows.Add(dr);
+                    dataset.Tables["UserRecette"].AcceptChanges();
                 }
                 else
                 {
-                    commande = "DELETE FROM UserRecette WHERE codeRecetre = " + (((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + " AND codeUser = " + idAccount;
+                    commande = "DELETE FROM UserRecette WHERE codeRecette = " + (((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + " AND codeUser = " + idAccount; ;
+                    dataset.Tables["UserRecette"].Rows.Remove(dataset.Tables["UserRecette"].Select("codeRecette = " + (((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).drow["codeRecette"])[0]);
+                    dataset.AcceptChanges();
                 }
             }
             else if (((PictureBox)sender).Parent.Parent is carteGrande)
             {
                 if ((((carteGrande)((PictureBox)sender).Parent.Parent)).isLiked)
                 {
-                    commande = "INSERT INTO UserRecettes value(" + idAccount + ", " + (((carteGrande)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + ")";
+                    commande = "INSERT INTO UserRecette VALUES(" + idAccount + ", " + (((carteGrande)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + ", 5, '')";
+                    DataRow dr = dataset.Tables["UserRecette"].NewRow();
+                    dr["codeUser"] = idAccount;
+                    dr["codeRecette"] = (((carteGrande)((PictureBox)sender).Parent.Parent)).drow["codeRecette"];
+                    dataset.Tables["UserRecette"].Rows.Add(dr);
+                    dataset.Tables["UserRecette"].AcceptChanges();
                 }
                 else
                 {
-                    commande = "DELETE FROM UserRecette WHERE codeRecetre = " + (((carteGrande)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + " AND codeUser = " + idAccount;
+                    commande = "DELETE FROM UserRecette WHERE codeRecette = " + (((carteGrande)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + " AND codeUser = " + idAccount; ;
+                    dataset.Tables["UserRecette"].Rows.Remove(dataset.Tables["UserRecette"].Select("codeRecette = " + (((carteGrande)((PictureBox)sender).Parent.Parent)).drow["codeRecette"])[0]);
+                    dataset.AcceptChanges();
                 }
             }
 
