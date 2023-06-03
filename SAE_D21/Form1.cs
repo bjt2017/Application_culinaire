@@ -219,55 +219,17 @@ namespace SAE_D21
 
         private void user_Click(object sender, EventArgs e)
         {
-            Login form1 = new Login(dataset);
-            form1.ShowDialog();
-            PictureBox pictureBox1 = new PictureBox();
-            pictureBox1.Size = new Size(1080, 720);
-            pictureBox1.Image = System.Drawing.Image.FromFile("../../assets/bg.png");
+            PictureBox pictureBox = new PictureBox();
+            pictureBox.Image = Image.FromFile("../../assets/bg.png");
+            pictureBox.Size = new Size(1080, 720);
+            this.Controls.Add(pictureBox);
+            pictureBox.BringToFront();
 
-            this.Controls.Add((PictureBox)pictureBox1);
-            pictureBox1.BringToFront();
-            pictureBox1.BackColor = Color.Transparent;
-
-            if (form1.DialogResult == DialogResult.OK)
-            {
-                foreach (ucCarte carte in menu.Controls.OfType<ucCarte>())
-                {
-                    carte.isLiked = false;
-                }
-                foreach (carteGrande carte in menu.Controls.OfType<carteGrande>())
-                {
-                    carte.isLiked = false;
-                }
-                idAccount = form1.Id;
-                setImageAccount();
-                foreach (ucCarte carte in menu.Controls.OfType<ucCarte>())
-                {
-                    try
-                    {
-                        MessageBox.Show(dataset.Tables["UserRecette"].Select("codeRecette = " + carte.drow["codeRecette"])[0]["codeUser"].ToString() + " " + idAccount.ToString());
-                        if (dataset.Tables["UserRecette"].Select("codeRecette = " + carte.drow["codeRecette"])[0]["codeUser"].ToString() == idAccount.ToString())
-                        {
-                            carte.isLiked = true;
-                        }
-                    }
-                    catch (Exception ex) { }
-                }
-                foreach (carteGrande carte in menu.Controls.OfType<carteGrande>())
-                {
-                    try
-                    {
-                        if (dataset.Tables["UserRecette"].Select("codeRecette = " + carte.drow["codeRecette"])[0]["codeUser"].ToString() == idAccount.ToString())
-                        {
-                            carte.isLiked = true;
-                        }
-                    }
-                    catch (Exception ex) { }
-                }
-
-
-            }
-            //this.Close();
+            ucLogIn ucLogIn = new ucLogIn();
+            ucLogIn.Location = new Point(this.Width/2 - ucLogIn.Width/2, this.Height/2 - ucLogIn.Height/2);
+            this.Controls.Add(ucLogIn);
+            ucLogIn.BringToFront();
+            ucLogIn.Paint += ucLogin_Paint;
         }
 
         private void setImageAccount()
@@ -315,8 +277,6 @@ namespace SAE_D21
                     }
                 }
             }
-            this.Clear();
-            this.Controls.Add(menu);
         }
 
         private void like_Click(Object sender, EventArgs e)
@@ -907,6 +867,22 @@ namespace SAE_D21
             path.AddArc(0, ((Panel)sender).Height - radius, radius, radius, 90, 90);
             path.CloseFigure();
             ((Panel)sender).Region = new Region(path);
+        }
+
+        private void ucLogin_Paint(object sender, PaintEventArgs e)
+        {
+            int radius = 100; // Rayon des bords ronds
+            System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
+            path.StartFigure();
+            path.AddArc(0, 0, radius, radius, 180, 90);
+            path.AddLine(radius, 0, ((ucLogIn)sender).Width - radius, 0);
+            path.AddArc(((ucLogIn)sender).Width - radius, 0, radius, radius, 270, 90);
+            path.AddLine(((ucLogIn)sender).Width, radius, ((ucLogIn)sender).Width, ((ucLogIn)sender).Height - radius);
+            path.AddArc(((ucLogIn)sender).Width - radius, ((ucLogIn)sender).Height - radius, radius, radius, 0, 90);
+            path.AddLine(((ucLogIn)sender).Width - radius, ((ucLogIn)sender).Height, radius, ((ucLogIn)sender).Height);
+            path.AddArc(0, ((ucLogIn)sender).Height - radius, radius, radius, 90, 90);
+            path.CloseFigure();
+            ((ucLogIn)sender).Region = new Region(path);
         }
 
 
