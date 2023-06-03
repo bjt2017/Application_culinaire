@@ -235,9 +235,40 @@ namespace SAE_D21
 
             if (form1.DialogResult == DialogResult.OK)
             {
+                foreach (ucCarte carte in menu.Controls.OfType<ucCarte>())
+                {
+                    carte.isLiked = false;
+                }
+                foreach (carteGrande carte in menu.Controls.OfType<carteGrande>())
+                {
+                    carte.isLiked = false;
+                }
                 idAccount = form1.Id;
                 setImageAccount();
-                
+                foreach (ucCarte carte in menu.Controls.OfType<ucCarte>())
+                {
+                    try
+                    {
+                        MessageBox.Show(dataset.Tables["UserRecette"].Select("codeRecette = " + carte.drow["codeRecette"])[0]["codeUser"].ToString() + " " + idAccount.ToString());
+                        if (dataset.Tables["UserRecette"].Select("codeRecette = " + carte.drow["codeRecette"])[0]["codeUser"].ToString() == idAccount.ToString())
+                        {
+                            carte.isLiked = true;
+                        }
+                    }catch (Exception ex) { }
+                }
+                foreach (carteGrande carte in menu.Controls.OfType<carteGrande>())
+                {
+                    try
+                    {
+                        if (dataset.Tables["UserRecette"].Select("codeRecette = " + carte.drow["codeRecette"])[0]["codeUser"].ToString() == idAccount.ToString())
+                        {
+                            carte.isLiked = true;
+                        }
+                    }
+                    catch (Exception ex) { }
+                }
+               
+
             }
             //this.Close();
         }
