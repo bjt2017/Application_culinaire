@@ -43,10 +43,10 @@ namespace SAE_D21
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (dataSet.Tables["User"].Select("pseudo = '" + textBox1.Text + "' AND password = '" + textBox2.Text + "'").Length > 0)
+            if (dataSet.Tables["User"].Select("mail = '" + textBox1.Text + "' AND password = '" + textBox2.Text + "'").Length > 0)
             {
                 this.Hide();
-                this.Id = Convert.ToInt32(dataSet.Tables["User"].Select("pseudo = '" + textBox1.Text + "' AND password = '" + textBox2.Text + "'")[0]["codeUser"]);
+                this.Id = Convert.ToInt32(dataSet.Tables["User"].Select("mail = '" + textBox1.Text + "' AND password = '" + textBox2.Text + "'")[0]["codeUser"]);
                 MessageBox.Show("Bienvenue " + textBox1.Text);
                 this.DialogResult = DialogResult.OK;
                 this.Close();
