@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Accueil;
-using SAE_D21;
 
 namespace SAE_D21
 {
@@ -99,7 +92,7 @@ namespace SAE_D21
                 {
                     form.Controls.Remove(c);
                     control = true;
-                    
+
                 }
             }
         }
