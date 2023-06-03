@@ -243,20 +243,20 @@ namespace SAE_D21
         {
             if (idAccount > 0)
             {
-                foreach (Control ctr in this.Controls.OfType<PictureBox>())
+                foreach (Control ctr in menu.Controls.OfType<PictureBox>())
                 {
                     if (ctr.Tag.ToString() == "user")
                     {
                         ((PictureBox)ctr).Image = System.Drawing.Image.FromFile("../../assets/account/userCo.png");
                     }
                 }
-                foreach (Control ctr in this.Controls.OfType<Label>())
+                foreach (Control ctr in menu.Controls.OfType<Label>())
                 {
                     try
                     {
                         if (ctr.Tag != null && ctr.Tag.ToString() == "user")
                         {
-                            this.Controls.Remove(ctr);
+                            menu.Controls.Remove(ctr);
                         }
                     }catch (Exception)
                     {
@@ -271,11 +271,11 @@ namespace SAE_D21
                 label.Size = new Size(128, 32);
                 label.TextAlign = ContentAlignment.MiddleCenter;
                 label.AutoSize = false;
-                this.Controls.Add(label);
+                menu.Controls.Add(label);
             }
             else
             {
-                foreach (Control ctr in this.Controls.OfType<PictureBox>())
+                foreach (Control ctr in menu.Controls.OfType<PictureBox>())
                 {
                     if (ctr.Tag.ToString() == "user")
                     {
@@ -283,6 +283,50 @@ namespace SAE_D21
                     }
                 }
             }
+            this.Clear();
+            this.Controls.Add(menu);
+        }
+
+        private void like_Click(Object sender, EventArgs e)
+        {
+            con.Open();
+            String commande = "";
+            OleDbCommand command;
+            int i = 0;
+            if (((PictureBox)sender).Parent.Parent is ucCarte)
+            {
+                if ((((ucCarte)((PictureBox)sender).Parent.Parent)).isLiked)
+                {
+                    commande = "INSERT INTO UserRecettes value(" + idAccount + ", " + (((ucCarte)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + ")";
+                }
+                else
+                {
+                    commande = "DELETE FROM UserRecette WHERE codeRecetre = " + (((ucCarte)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + " AND codeUser = " + idAccount;
+                }
+            } else if (((PictureBox)sender).Parent.Parent is ucCarteEtoile)
+            {
+                if ((((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).isLiked)
+                {
+                    commande = "INSERT INTO UserRecettes value(" + idAccount + ", " + (((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + ")";
+                }
+                else
+                {
+                    commande = "DELETE FROM UserRecette WHERE codeRecetre = " + (((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + " AND codeUser = " + idAccount;
+                }
+            }
+            else if (((PictureBox)sender).Parent.Parent is carteGrande)
+            {
+                if ((((carteGrande)((PictureBox)sender).Parent.Parent)).isLiked)
+                {
+                    commande = "INSERT INTO UserRecettes value(" + idAccount + ", " + (((carteGrande)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + ")";
+                }
+                else
+                {
+                    commande = "DELETE FROM UserRecette WHERE codeRecetre = " + (((carteGrande)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + " AND codeUser = " + idAccount;
+                }
+            }
+
+            con.Close();
         }
 
         // Load dataset
