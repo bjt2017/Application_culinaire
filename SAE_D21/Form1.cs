@@ -31,6 +31,7 @@ namespace SAE_D21
             barre.SetClick_Home(this.Click_Home);
             barre.SetClick_Categorie(this.Click_Categorie);
             barre.SetClick_Filtre(this.Click_Recherche_Ingredient);
+            barre.SetClick_Like(this.Click_Like);
             barre.Location = new Point(0, 642);
             this.Controls.Add(barre);
 
@@ -172,6 +173,7 @@ namespace SAE_D21
                     }
                     ucCarte.Location = new Point(25 + j * ucCarte.Width + decale_x, 430 + i * ucCarte.Height + decale_y);
                     ucCarte.setClick(carteGrande_Click);
+                    ucCarte.set_click_like(like_Click);
                     menu.Controls.Add(ucCarte);
                 }
 
@@ -202,6 +204,7 @@ namespace SAE_D21
                 {
 
                 }
+                carteGrande.set_click_like(like_Click);
                 menu.Controls.Add(carteGrande);
             }
 
@@ -243,20 +246,20 @@ namespace SAE_D21
         {
             if (idAccount > 0)
             {
-                foreach (Control ctr in this.Controls.OfType<PictureBox>())
+                foreach (Control ctr in menu.Controls.OfType<PictureBox>())
                 {
                     if (ctr.Tag.ToString() == "user")
                     {
                         ((PictureBox)ctr).Image = System.Drawing.Image.FromFile("../../assets/account/userCo.png");
                     }
                 }
-                foreach (Control ctr in this.Controls.OfType<Label>())
+                foreach (Control ctr in menu.Controls.OfType<Label>())
                 {
                     try
                     {
                         if (ctr.Tag != null && ctr.Tag.ToString() == "user")
                         {
-                            this.Controls.Remove(ctr);
+                            menu.Controls.Remove(ctr);
                         }
                     }catch (Exception)
                     {
@@ -271,11 +274,11 @@ namespace SAE_D21
                 label.Size = new Size(128, 32);
                 label.TextAlign = ContentAlignment.MiddleCenter;
                 label.AutoSize = false;
-                this.Controls.Add(label);
+                menu.Controls.Add(label);
             }
             else
             {
-                foreach (Control ctr in this.Controls.OfType<PictureBox>())
+                foreach (Control ctr in menu.Controls.OfType<PictureBox>())
                 {
                     if (ctr.Tag.ToString() == "user")
                     {
@@ -283,6 +286,78 @@ namespace SAE_D21
                     }
                 }
             }
+            this.Clear();
+            this.Controls.Add(menu);
+        }
+
+        private void like_Click(Object sender, EventArgs e)
+        {
+            con.Open();
+            String commande = "";
+            int i = 0;
+            if (((PictureBox)sender).Parent.Parent is ucCarte)
+            {
+                if ((((ucCarte)((PictureBox)sender).Parent.Parent)).isLiked)
+                {
+                    commande = "INSERT INTO UserRecette VALUES(" + idAccount + ", " + (((ucCarte)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + ", 5, '')";
+                    DataRow dr = dataset.Tables["UserRecette"].NewRow();
+                    dr["codeUser"] = idAccount;
+                    dr["codeRecette"] = (((ucCarte)((PictureBox)sender).Parent.Parent)).drow["codeRecette"];
+                    dataset.Tables["UserRecette"].Rows.Add(dr);
+                    dataset.Tables["UserRecette"].AcceptChanges();
+                }
+                else
+                {
+                    commande = "DELETE FROM UserRecette WHERE codeRecette = " + (((ucCarte)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + " AND codeUser = " + idAccount;;
+                    dataset.Tables["UserRecette"].Rows.Remove(dataset.Tables["UserRecette"].Select("codeRecette = " + (((ucCarte)((PictureBox)sender).Parent.Parent)).drow["codeRecette"])[0]);
+                    dataset.AcceptChanges();
+                }
+            } else if (((PictureBox)sender).Parent.Parent is ucCarteEtoile)
+            {
+                if ((((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).isLiked)
+                {
+                    commande = "INSERT INTO UserRecettes value(" + idAccount + ", " + (((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + ")";
+                }
+                else
+                {
+                    commande = "DELETE FROM UserRecette WHERE codeRecetre = " + (((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + " AND codeUser = " + idAccount;
+                }
+            }
+            else if (((PictureBox)sender).Parent.Parent is carteGrande)
+            {
+                if ((((carteGrande)((PictureBox)sender).Parent.Parent)).isLiked)
+                {
+                    commande = "INSERT INTO UserRecettes value(" + idAccount + ", " + (((carteGrande)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + ")";
+                }
+                else
+                {
+                    commande = "DELETE FROM UserRecette WHERE codeRecetre = " + (((carteGrande)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + " AND codeUser = " + idAccount;
+                }
+            }
+            
+            OleDbTransaction oleDbTransaction = con.BeginTransaction();
+            try
+            {
+                // Assigner la transaction à la commande
+                OleDbCommand command = new OleDbCommand(commande, con);
+                command.Transaction = oleDbTransaction;
+
+                // Effectuer vos modifications ici avec la commande
+
+                // Exécuter la commande
+                command.ExecuteNonQuery();
+
+                // Commit de la transaction
+                oleDbTransaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                // Gérer les erreurs
+                MessageBox.Show(commande);
+                MessageBox.Show(ex.Message);
+                //throw new Exception(ex.Message);
+            }
+            con.Close();
         }
 
         // Load dataset
@@ -713,6 +788,42 @@ namespace SAE_D21
                 select = 2;
             }
 
+        }
+
+        public void Click_Like(object sender, EventArgs e) { 
+            if (select != 3)
+            {
+                this.Clear();
+                Panel panel = new Panel();
+                panel.BackColor = Color.FromArgb(255, 0, 0, 0);
+                panel.Width = 896;
+                panel.Height = 2;
+                panel.Location = new Point((this.Width) / 2 - (panel.Width) / 2, 160);
+                this.Controls.Add(panel);
+
+                for (int  i = 0; i < dataset.Tables["UserRecette"].Rows.Count; i++)
+                {
+                    if (dataset.Tables["UserRecette"].Rows[i]["codeUser"].ToString() == idAccount.ToString())
+                    {
+                        DataRow row = dataset.Tables["Recettes"].Select("codeRecette = " + dataset.Tables["UserRecette"].Rows[i]["codeRecette"])[0];
+                        ucCarteEtoile carte = this.createCarteStars(row, 50 + (i % 3) * 330, 0 + (i / 3) * 100);
+                        this.Controls.Add(carte);
+                    }
+                }
+                select = -1;
+
+                if (dataset.Tables["UserRecette"].Rows.Count == 0)
+                {
+                    Label label = new Label();
+                    label.Size = new System.Drawing.Size(500, 42);
+                    label.Text = "Aucune recette ne correspond à votre recherche";
+                    label.Font = new System.Drawing.Font("Bahnschrift", 16, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+                    label.Location = new Point((this.Width) / 2 - (label.Width) / 2, 300);
+                    label.TextAlign = ContentAlignment.MiddleCenter;
+                    this.Controls.Add(label);
+                    label.BringToFront();
+                }
+            }
         }
 
 
