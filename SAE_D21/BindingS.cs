@@ -36,6 +36,8 @@ namespace SAE_D21
             lblEtape.AutoSize = true;
             form.Controls.Add(lblEtape);
 
+
+
             Button btnFirst = new Button();
             btnFirst.Text = "Début";
             btnFirst.Location = new System.Drawing.Point(50, 200);
