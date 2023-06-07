@@ -1022,7 +1022,7 @@ namespace SAE_D21
 
                     // Commit de la transaction
                     oleDbTransaction.Commit();
-                    MessageBox.Show("Bien enregister");
+                    
                     ((FeuilleCommantaire)((Label)sender).Parent.Parent).enregistrer = true;
                     loadDataset();
 
