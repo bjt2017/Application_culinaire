@@ -995,10 +995,11 @@ namespace SAE_D21
         private void click_Commantaire(object sender, EventArgs e)
         {
            save = this.Controls.OfType<FeuilleRecette>().ToArray()[0];
-           FeuilleCommantaire fc = new FeuilleCommantaire(dataset, save.dr,retour,Entregister_Avis,idAccount);
+           
+           FeuilleCommantaire fc = new FeuilleCommantaire(dataset, save.dr, retour, Entregister_Avis, idAccount);
 
-            this.Clear();
-            this.Controls.Add(fc);
+           this.Clear();
+           this.Controls.Add(fc);
         }
         private void Entregister_Avis(object sender, EventArgs e)
         {
