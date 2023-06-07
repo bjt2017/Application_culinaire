@@ -203,6 +203,7 @@ namespace SAE_D21
                 carteGrande.set_click_like(like_Click);
                 menu.Controls.Add(carteGrande);
             }
+            Modifie_like_menu();
 
         }
 
@@ -686,7 +687,7 @@ namespace SAE_D21
         public void add_Liste_Recette(object sender, EventArgs e)
         {
             List<Accueil.ucIngredient.Ingredient> lst = new List<ucIngredient.Ingredient>();
-            foreach (Accueil.ucIngredient.Ingredient @struct in ((FeuilleRecette)((Label)sender).Parent.Parent.Parent.Parent).ListeIng)
+            foreach (Accueil.ucIngredient.Ingredient @struct in ((FeuilleRecette)((Label)sender).Parent.Parent.Parent).ListeIng)
             {
                 bool existe = false;
                 foreach (Accueil.ucIngredient.Ingredient element in liste_de_course)
@@ -980,8 +981,10 @@ namespace SAE_D21
                     row = ((carteGrande)((Label)sender).Parent.Parent).drow;
                 }
             }
-
-            Accueil.FeuilleRecette f = new Accueil.FeuilleRecette(row, dataset, add_Liste_Recette,click_EtapeParEtape,click_Commantaire);
+            bool like = false;
+            
+            
+            Accueil.FeuilleRecette f = new Accueil.FeuilleRecette(row, dataset, add_Liste_Recette,click_EtapeParEtape,click_Commantaire, dataset.Tables["UserRecette"].Select("codeUser=" + idAccount + " and codeRecette=" + row["codeRecette"]).Length == 0);
             f.Location = new Point(0, 0);
             this.Clear();
             this.Controls.Add(f);
@@ -992,7 +995,7 @@ namespace SAE_D21
         private void click_Commantaire(object sender, EventArgs e)
         {
            save = this.Controls.OfType<FeuilleRecette>().ToArray()[0];
-           FeuilleCommantaire fc = new FeuilleCommantaire(dataset, ((FeuilleRecette)((Label)sender).Parent.Parent).dr,retour,Entregister_Avis);
+           FeuilleCommantaire fc = new FeuilleCommantaire(dataset, save.dr,retour,Entregister_Avis,idAccount);
 
             this.Clear();
             this.Controls.Add(fc);
@@ -1001,8 +1004,8 @@ namespace SAE_D21
         {
             if (!((FeuilleCommantaire)((Label)sender).Parent.Parent).enregistrer)
             {
-
-                string r = "Insert into UserRecetteCommentaire Values(" + idAccount + ",'" + (((FeuilleCommantaire)((Label)sender).Parent.Parent).Values).note + "','" + (((FeuilleCommantaire)((Label)sender).Parent.Parent).Values).avis.Replace("'","''") + "', '" + (((FeuilleCommantaire)((Label)sender).Parent.Parent).Values).codeRecette.ToString() + "')";
+                DateTime now = DateTime.Now;
+                string r = "Insert into UserRecetteCommentaire Values(" + idAccount + ",'" + (((FeuilleCommantaire)((Label)sender).Parent.Parent).Values).note + "','" + (((FeuilleCommantaire)((Label)sender).Parent.Parent).Values).avis.Replace("'","''") + "', '" + now.ToString("dd/MM/yyyy 'à' HH'h'mm") +"','" + (((FeuilleCommantaire)((Label)sender).Parent.Parent).Values).codeRecette.ToString() + "')";
                 con.Open();
 
                 OleDbTransaction oleDbTransaction = con.BeginTransaction();
@@ -1040,7 +1043,7 @@ namespace SAE_D21
         {
             this.Clear();
             this.Controls.Add(save);
-            save = null;
+            
             
         }
         private void click_EtapeParEtape(object sender, EventArgs e)
