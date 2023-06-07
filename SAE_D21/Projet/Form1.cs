@@ -1002,7 +1002,7 @@ namespace SAE_D21
             if (!((FeuilleCommantaire)((Label)sender).Parent.Parent).enregistrer)
             {
 
-                string r = "Insert into UserRecetteCommentaire Values(" + idAccount + ",'" + (((FeuilleCommantaire)((Label)sender).Parent.Parent).Values).note + "','" + (((FeuilleCommantaire)((Label)sender).Parent.Parent).Values).avis.Replace("'","'") + "', '" + (((FeuilleCommantaire)((Label)sender).Parent.Parent).Values).codeRecette.ToString() + "')";
+                string r = "Insert into UserRecetteCommentaire Values(" + idAccount + ",'" + (((FeuilleCommantaire)((Label)sender).Parent.Parent).Values).note + "','" + (((FeuilleCommantaire)((Label)sender).Parent.Parent).Values).avis.Replace("'","''") + "', '" + (((FeuilleCommantaire)((Label)sender).Parent.Parent).Values).codeRecette.ToString() + "')";
                 con.Open();
 
                 OleDbTransaction oleDbTransaction = con.BeginTransaction();
