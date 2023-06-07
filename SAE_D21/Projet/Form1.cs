@@ -1,4 +1,5 @@
 ﻿using Accueil;
+using Org.BouncyCastle.Utilities.Collections;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -57,10 +58,7 @@ namespace SAE_D21
         String rechercheSetting = "";
 
 
-        private void testClick(object sender, EventArgs e)
-        {
-            BindingS binding = new BindingS(this, dataset, 1);
-        }
+        
 
         private int idAccount = -1;
         Random rnd = new Random();
@@ -220,7 +218,7 @@ namespace SAE_D21
         List<DataRow> recettes = new List<DataRow>();
 
 
-
+        //Connection 
         private void user_Click(object sender, EventArgs e)
         {
             PictureBox pictureBox = new PictureBox();
@@ -260,6 +258,10 @@ namespace SAE_D21
             
 
         }
+
+
+
+
         public void Modifie_like_menu()
         {
             foreach (Control ctr in menu.Controls)
@@ -341,91 +343,7 @@ namespace SAE_D21
             }
         }
 
-        private void like_Click(Object sender, EventArgs e)
-        {
-            con.Open();
-            String commande = "";
-            int i = 0;
-            if (((PictureBox)sender).Parent.Parent is ucCarte)
-            {
-                if ((((ucCarte)((PictureBox)sender).Parent.Parent)).isLiked)
-                {
-                    commande = "INSERT INTO UserRecette VALUES(" + idAccount + ", " + (((ucCarte)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + ", 5, '')";
-                    DataRow dr = dataset.Tables["UserRecette"].NewRow();
-                    dr["codeUser"] = idAccount;
-                    dr["codeRecette"] = (((ucCarte)((PictureBox)sender).Parent.Parent)).drow["codeRecette"];
-                    dataset.Tables["UserRecette"].Rows.Add(dr);
-                    dataset.Tables["UserRecette"].AcceptChanges();
-                }
-                else
-                {
-                    commande = "DELETE FROM UserRecette WHERE codeRecette = " + (((ucCarte)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + " AND codeUser = " + idAccount; ;
-                    dataset.Tables["UserRecette"].Rows.Remove(dataset.Tables["UserRecette"].Select("codeRecette = " + (((ucCarte)((PictureBox)sender).Parent.Parent)).drow["codeRecette"])[0]);
-                    dataset.AcceptChanges();
-                }
-            }
-            else if (((PictureBox)sender).Parent.Parent is ucCarteEtoile)
-            {
-                if ((((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).isLiked)
-                {
-                    commande = "INSERT INTO UserRecette VALUES(" + idAccount + ", " + (((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + ", 5, '')";
-                    DataRow dr = dataset.Tables["UserRecette"].NewRow();
-                    dr["codeUser"] = idAccount;
-                    dr["codeRecette"] = (((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).drow["codeRecette"];
-                    dataset.Tables["UserRecette"].Rows.Add(dr);
-                    dataset.Tables["UserRecette"].AcceptChanges();
-                }
-                else
-                {
-                    commande = "DELETE FROM UserRecette WHERE codeRecette = " + (((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + " AND codeUser = " + idAccount; ;
-                    dataset.Tables["UserRecette"].Rows.Remove(dataset.Tables["UserRecette"].Select("codeRecette = " + (((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).drow["codeRecette"])[0]);
-                    dataset.AcceptChanges();
-                }
-            }
-            else if (((PictureBox)sender).Parent.Parent is carteGrande)
-            {
-                if ((((carteGrande)((PictureBox)sender).Parent.Parent)).isLiked)
-                {
-                    commande = "INSERT INTO UserRecette VALUES(" + idAccount + ", " + (((carteGrande)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + ", 5, '')";
-                    DataRow dr = dataset.Tables["UserRecette"].NewRow();
-                    dr["codeUser"] = idAccount;
-                    dr["codeRecette"] = (((carteGrande)((PictureBox)sender).Parent.Parent)).drow["codeRecette"];
-                    dataset.Tables["UserRecette"].Rows.Add(dr);
-                    dataset.Tables["UserRecette"].AcceptChanges();
-                }
-                else
-                {
-                    commande = "DELETE FROM UserRecette WHERE codeRecette = " + (((carteGrande)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + " AND codeUser = " + idAccount; ;
-                    dataset.Tables["UserRecette"].Rows.Remove(dataset.Tables["UserRecette"].Select("codeRecette = " + (((carteGrande)((PictureBox)sender).Parent.Parent)).drow["codeRecette"])[0]);
-                    dataset.AcceptChanges();
-                }
-            }
-           
-            OleDbTransaction oleDbTransaction = con.BeginTransaction();
-            try
-            {
-                // Assigner la transaction à la commande
-                OleDbCommand command = new OleDbCommand(commande, con);
-                command.Transaction = oleDbTransaction;
-
-                // Effectuer vos modifications ici avec la commande
-
-                // Exécuter la commande
-                command.ExecuteNonQuery();
-
-                // Commit de la transaction
-                oleDbTransaction.Commit();
-            }
-            catch (Exception ex)
-            {
-                // Gérer les erreurs
-                MessageBox.Show(commande);
-                MessageBox.Show(ex.Message);
-                //throw new Exception(ex.Message);
-            }
-            
-            con.Close();
-        }
+        
 
         public void Click_SignUp(Object sender, EventArgs e)
         {
@@ -446,6 +364,7 @@ namespace SAE_D21
                 
             }
         }
+
 
         // Load dataset
         private void loadDataset()
@@ -485,6 +404,7 @@ namespace SAE_D21
         }
 
 
+        //Constructeur de carte
         private ucCarte createCarte(DataRow dr, int x, int y)
         {
             // Create carte
@@ -581,6 +501,9 @@ namespace SAE_D21
             }
         }
 
+
+
+        //Propriete de la barre de recherche
         private void barDeRecherche1_KeyPress(object sender, KeyPressEventArgs e)
         {
             System.Windows.Forms.TextBox searchbar = (System.Windows.Forms.TextBox)sender;
@@ -616,6 +539,9 @@ namespace SAE_D21
                 }
             }
         }
+
+
+
         private void listeIngredientInRecette()
         {
             if (con.State == ConnectionState.Closed)
@@ -686,7 +612,7 @@ namespace SAE_D21
                 {
                     carte.isLiked = true;
                 }
-                    
+
                 pnl.Controls.Add(carte);
             }
             select = -1;
@@ -741,6 +667,268 @@ namespace SAE_D21
             boutton_filtre2.Controls.Add(image_filtre);
         }
 
+        public void Recherche_Ingredient(object sender, EventArgs e)
+        {
+            ucRechercheIngredient ri;
+            if (sender is Panel)
+            {
+                ri = ((Panel)sender).Parent.Parent as ucRechercheIngredient;
+            }
+            else
+            {
+                ri = ((Label)sender).Parent.Parent.Parent as ucRechercheIngredient;
+            }
+            rowingredient = ri.Ingredient;
+            this.listeIngredientInRecette();
+        }
+
+        List<Accueil.ucIngredient.Ingredient> liste_de_course = new List<Accueil.ucIngredient.Ingredient>();
+        public void add_Liste_Recette(object sender, EventArgs e)
+        {
+            List<Accueil.ucIngredient.Ingredient> lst = new List<ucIngredient.Ingredient>();
+            foreach (Accueil.ucIngredient.Ingredient @struct in ((FeuilleRecette)((Label)sender).Parent.Parent.Parent.Parent).ListeIng)
+            {
+                bool existe = false;
+                foreach (Accueil.ucIngredient.Ingredient element in liste_de_course)
+                {
+                    if (element.Name.Equals(@struct.Name))
+                    {
+                        existe = true;
+                        Accueil.ucIngredient.Ingredient ing = new ucIngredient.Ingredient();
+                        ing.Name = element.Name;
+                        ing.Quantiter = element.Quantiter + @struct.Quantiter;
+                        ing.uniter = element.uniter;
+                        lst.Add(ing);
+                        break;
+                    }
+                }
+                if (!existe)
+                {
+                    Accueil.ucIngredient.Ingredient ing = new ucIngredient.Ingredient();
+                    ing.Name = @struct.Name;
+                    ing.Quantiter = @struct.Quantiter;
+                    ing.uniter = @struct.uniter;
+                    lst.Add(ing);
+                }
+            }
+            liste_de_course.Clear();
+            foreach (Accueil.ucIngredient.Ingredient element in lst)
+            {
+                liste_de_course.Add(element);
+            }
+        }
+        
+
+
+        //Convertie un retour en requette
+        public void StructToStr(Accueil.ucCategorie.Return @return)
+        {
+            rechercheSetting = "";
+            bool first = true;
+            if (@return.codeCatego.Count > 0)
+            {
+                foreach (int i in @return.codeCatego)
+                {
+                    if (first)
+                    {
+                        rechercheSetting += " AND (codeRecette IN (SELECT codeRecette FROM CatégoriesRecette WHERE codeCategorie = " + i + ") ";
+                        first = false;
+                    }
+                    else
+                    {
+                        rechercheSetting += " OR codeRecette IN (SELECT codeRecette FROM CatégoriesRecette WHERE codeCategorie = " + i + ") ";
+                    }
+                }
+                rechercheSetting += ")";
+            }
+            rechercheSetting += " AND categPrix <= " + @return.prix;
+            if (@return.temps != 0)
+            {
+                rechercheSetting += " AND tempsCuisson <= " + @return.temps;
+            }
+        }
+
+
+
+        //*Toute les fonctions click*//
+        //Fonction changement de page//
+        //Changement de page vers le filtre categorie
+        private int select = 1;
+        public void Click_Categorie(object sender, EventArgs e)
+        {
+            if (CategoriePage == null)
+            {
+                CategoriePage = new ucCategorie(dataset.Tables["Catégories"], Click_Recherche_Categorie);
+            }
+            if (select != 2)
+            {
+                this.Clear();
+
+                this.Controls.Add(CategoriePage);
+                select = 2;
+            }
+
+        }
+        //Changement de page vers d'accueil
+        public void Click_Home(object sender, EventArgs e)
+        {
+            if (select != 1)
+            {
+                this.Clear();
+                foreach (BarDeRecherche Bdr in menu.Controls.OfType<BarDeRecherche>())
+                {
+                    Bdr.Text = "Rechercher (ex: Pomme, banane...)";
+                }
+
+                this.Controls.Add(menu);
+                Modifie_like_menu();
+                select = 1;
+            }
+
+
+        }
+        //Changement de page vers favoris
+        public void Click_Like(object sender, EventArgs e)
+        {
+
+            if (select != 3)
+            {
+                this.Clear();
+                Panel panel = new Panel();
+                panel.BackColor = Color.FromArgb(255, 0, 0, 0);
+                panel.Width = 896;
+                panel.Height = 2;
+                panel.Location = new Point((this.Width) / 2 - (panel.Width) / 2, 160);
+                this.Controls.Add(panel);
+                int nb = 0;
+
+
+                Label t = new Label();
+                t.AutoSize = true;
+                t.Text = "Vos Favoris";
+                t.Font = t.Font = new System.Drawing.Font("Bahnschrift SemiBold", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                t.Location = new Point(this.Width / 2 - t.Width / 2 - 50, 60);
+                this.Controls.Add(t);
+                foreach (DataRow r in dataset.Tables["UserRecette"].Select("codeUser=" + idAccount))
+                {
+
+                    if (r["codeUser"].ToString() == idAccount.ToString())
+                    {
+                        DataRow row = dataset.Tables["Recettes"].Select("codeRecette = " + r["codeRecette"])[0];
+                        ucCarteEtoile carte = this.createCarteStars(row, 50 + (nb % 3) * 330, 200 + (nb / 3) * 100);
+                        carte.isLiked = true;
+                        this.Controls.Add(carte);
+
+                        carte.set_click_like(like_Click);
+
+                        nb++;
+                    }
+                }
+                select = -1;
+
+                if (dataset.Tables["UserRecette"].Select("codeUser=" + idAccount).Length == 0)
+                {
+                    Label label = new Label();
+                    label.Size = new System.Drawing.Size(500, 42);
+                    label.Text = "Aucune recette ne correspond à votre recherche";
+                    label.Font = new System.Drawing.Font("Bahnschrift", 16, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+                    label.Location = new Point((this.Width) / 2 - (label.Width) / 2, 300);
+                    label.TextAlign = ContentAlignment.MiddleCenter;
+                    this.Controls.Add(label);
+                    label.BringToFront();
+                }
+            }
+        }
+
+        //Ajout dans la base de donnée lors d'un like
+        private void like_Click(Object sender, EventArgs e)
+        {
+            con.Open();
+            String commande = "";
+            int i = 0;
+            if (((PictureBox)sender).Parent.Parent is ucCarte)
+            {
+                if ((((ucCarte)((PictureBox)sender).Parent.Parent)).isLiked)
+                {
+                    commande = "INSERT INTO UserRecette VALUES(" + idAccount + ", " + (((ucCarte)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + ")";
+                    DataRow dr = dataset.Tables["UserRecette"].NewRow();
+                    dr["codeUser"] = idAccount;
+                    dr["codeRecette"] = (((ucCarte)((PictureBox)sender).Parent.Parent)).drow["codeRecette"];
+                    dataset.Tables["UserRecette"].Rows.Add(dr);
+                    dataset.Tables["UserRecette"].AcceptChanges();
+                }
+                else
+                {
+                    commande = "DELETE FROM UserRecette WHERE codeRecette = " + (((ucCarte)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + " AND codeUser = " + idAccount; ;
+                    dataset.Tables["UserRecette"].Rows.Remove(dataset.Tables["UserRecette"].Select("codeRecette = " + (((ucCarte)((PictureBox)sender).Parent.Parent)).drow["codeRecette"])[0]);
+                    dataset.AcceptChanges();
+                }
+            }
+            else if (((PictureBox)sender).Parent.Parent is ucCarteEtoile)
+            {
+                if ((((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).isLiked)
+                {
+                    commande = "INSERT INTO UserRecette VALUES(" + idAccount + ", " + (((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + ")";
+                    DataRow dr = dataset.Tables["UserRecette"].NewRow();
+                    dr["codeUser"] = idAccount;
+                    dr["codeRecette"] = (((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).drow["codeRecette"];
+                    dataset.Tables["UserRecette"].Rows.Add(dr);
+                    dataset.Tables["UserRecette"].AcceptChanges();
+                }
+                else
+                {
+                    commande = "DELETE FROM UserRecette WHERE codeRecette = " + (((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + " AND codeUser = " + idAccount; ;
+                    dataset.Tables["UserRecette"].Rows.Remove(dataset.Tables["UserRecette"].Select("codeRecette = " + (((ucCarteEtoile)((PictureBox)sender).Parent.Parent)).drow["codeRecette"])[0]);
+                    dataset.AcceptChanges();
+                }
+            }
+            else if (((PictureBox)sender).Parent.Parent is carteGrande)
+            {
+                if ((((carteGrande)((PictureBox)sender).Parent.Parent)).isLiked)
+                {
+                    commande = "INSERT INTO UserRecette VALUES(" + idAccount + ", " + (((carteGrande)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + ")";
+                    DataRow dr = dataset.Tables["UserRecette"].NewRow();
+                    dr["codeUser"] = idAccount;
+                    dr["codeRecette"] = (((carteGrande)((PictureBox)sender).Parent.Parent)).drow["codeRecette"];
+                    dataset.Tables["UserRecette"].Rows.Add(dr);
+                    dataset.Tables["UserRecette"].AcceptChanges();
+                }
+                else
+                {
+                    commande = "DELETE FROM UserRecette WHERE codeRecette = " + (((carteGrande)((PictureBox)sender).Parent.Parent)).drow["codeRecette"].ToString() + " AND codeUser = " + idAccount; ;
+                    dataset.Tables["UserRecette"].Rows.Remove(dataset.Tables["UserRecette"].Select("codeRecette = " + (((carteGrande)((PictureBox)sender).Parent.Parent)).drow["codeRecette"])[0]);
+                    dataset.AcceptChanges();
+                }
+            }
+
+            OleDbTransaction oleDbTransaction = con.BeginTransaction();
+            try
+            {
+                // Assigner la transaction à la commande
+                OleDbCommand command = new OleDbCommand(commande, con);
+                command.Transaction = oleDbTransaction;
+
+                // Effectuer vos modifications ici avec la commande
+
+                // Exécuter la commande
+                command.ExecuteNonQuery();
+
+                // Commit de la transaction
+                oleDbTransaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                // Gérer les erreurs
+                MessageBox.Show(commande);
+                MessageBox.Show(ex.Message);
+                //throw new Exception(ex.Message);
+            }
+
+            con.Close();
+        }
+
+
+        //Clique sur une carte recette grande
         private void carteGrande_Click(object sender, EventArgs e)
         {
             DataRow row = dataset.Tables["Recettes"].Rows[0];
@@ -793,21 +981,113 @@ namespace SAE_D21
                 }
             }
 
-            Accueil.FeuilleRecette f = new Accueil.FeuilleRecette(row, dataset, add_Liste_Recette);
+            Accueil.FeuilleRecette f = new Accueil.FeuilleRecette(row, dataset, add_Liste_Recette,click_EtapeParEtape,click_Commantaire);
             f.Location = new Point(0, 0);
             this.Clear();
             this.Controls.Add(f);
             select = -1;
         }
+        FeuilleRecette save;
 
+        private void click_Commantaire(object sender, EventArgs e)
+        {
+           save = this.Controls.OfType<FeuilleRecette>().ToArray()[0];
+           FeuilleCommantaire fc = new FeuilleCommantaire(dataset, ((FeuilleRecette)((Label)sender).Parent.Parent).dr,retour,Entregister_Avis);
+
+            this.Clear();
+            this.Controls.Add(fc);
+        }
+        private void Entregister_Avis(object sender, EventArgs e)
+        {
+            if (!((FeuilleCommantaire)((Label)sender).Parent.Parent).enregistrer)
+            {
+
+                string r = "Insert into UserRecetteCommentaire Values(" + idAccount + ",'" + (((FeuilleCommantaire)((Label)sender).Parent.Parent).Values).note + "','" + (((FeuilleCommantaire)((Label)sender).Parent.Parent).Values).avis.Replace("'","'") + "', '" + (((FeuilleCommantaire)((Label)sender).Parent.Parent).Values).codeRecette.ToString() + "')";
+                con.Open();
+
+                OleDbTransaction oleDbTransaction = con.BeginTransaction();
+                try
+                {
+                    // Assigner la transaction à la commande
+                    OleDbCommand command = new OleDbCommand(r, con);
+                    command.Transaction = oleDbTransaction;
+
+                    // Effectuer vos modifications ici avec la commande
+
+                    // Exécuter la commande
+                    command.ExecuteNonQuery();
+
+                    // Commit de la transaction
+                    oleDbTransaction.Commit();
+                    MessageBox.Show("Bien enregister");
+                    ((FeuilleCommantaire)((Label)sender).Parent.Parent).enregistrer = true;
+                    loadDataset();
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString());
+                    MessageBox.Show(r);
+                }
+                con.Close();
+            }
+            else
+            {
+                MessageBox.Show("vous avez deja donné un avis pour cette recette");
+            }
+        }
+        private void retour(object sender, EventArgs e)
+        {
+            this.Clear();
+            this.Controls.Add(save);
+            save = null;
+            
+        }
+        private void click_EtapeParEtape(object sender, EventArgs e)
+        {
+            
+            BindingS binding = new BindingS(this, dataset, int.Parse(((FeuilleRecette)((Label)sender).Parent.Parent).dr["codeRecette"].ToString()));
+            
+        }
+
+        //Changement de page vers page recherche ingredient
+        public void Click_Recherche_Ingredient(object sender, EventArgs e)
+        {
+
+            if (rechercheIng == null) { rechercheIng = new ucRechercheIngredient(dataset.Tables["Famille"], dataset.Tables["ingrédients"], Recherche_Ingredient); }
+
+
+            if (select != 5)
+            {
+                this.Clear();
+                rechercheIng.add_carouselle();
+                this.Controls.Add(rechercheIng);
+                select = 5;
+            }
+
+
+        }
+
+        //Application du filtre categorie - button Appliquer
+        public void Click_Recherche_Categorie(object sender, EventArgs e)
+        {
+            Accueil.ucCategorie.Return @return = ((ucCategorie)((Label)sender).Parent.Parent.Parent).Requete;
+            StructToStr(@return);
+        }
+
+
+
+
+        //Fonction Clear
         public void Clear()
         {
             while (this.Controls.Count > 1)
             {
-                rechercheIng.clear_carouselle();
+                if (rechercheIng != null) { rechercheIng.clear_carouselle(); }
+
                 foreach (Control c in this.Controls)
                 {
-                    
+
                     if (!(c is ucBarre))
                     {
                         this.Controls.Remove(c);
@@ -834,169 +1114,7 @@ namespace SAE_D21
 
 
 
-        private int select = 1;
-        public void Click_Recherche_Ingredient(object sender, EventArgs e)
-        {
-
-            if (rechercheIng == null) { rechercheIng = new ucRechercheIngredient(dataset.Tables["Famille"], dataset.Tables["ingrédients"], Recherche_Ingredient); }
-            
-            
-            if (select != 5)
-            {
-                this.Clear();
-                rechercheIng.add_carouselle();
-                this.Controls.Add(rechercheIng);
-                select = 5;
-            }
-
-
-        }
-
-        public void Click_Recherche_Categorie(object sender, EventArgs e)
-        {
-            
-            
-            Accueil.ucCategorie.Return @return = ((ucCategorie)((Label)sender).Parent.Parent.Parent).Requete;
-            
-            StructToStr(@return);
-        }
-
-        public void Recherche_Ingredient(object sender, EventArgs e)
-        {
-            ucRechercheIngredient ri;
-            if (sender is Panel)
-            {
-                ri = ((Panel)sender).Parent.Parent as ucRechercheIngredient;
-            }
-            else
-            {
-                ri = ((Label)sender).Parent.Parent.Parent as ucRechercheIngredient;
-            }
-            rowingredient = ri.Ingredient;
-            this.listeIngredientInRecette();
-        }
-
-        public void Click_Home(object sender, EventArgs e)
-        {
-            if (select != 1)
-            {
-                this.Clear();
-                foreach (BarDeRecherche Bdr in menu.Controls.OfType<BarDeRecherche>())
-                {
-                    Bdr.Text = "Rechercher (ex: Pomme, banane...)";
-                }
-                
-                this.Controls.Add(menu);
-                Modifie_like_menu();
-                select = 1;
-            }
-
-
-        }
-        public void Click_Categorie(object sender, EventArgs e)
-        {
-            if (CategoriePage == null)
-            {
-                CategoriePage = new ucCategorie(dataset.Tables["Catégories"], Click_Recherche_Categorie);
-            }
-            if (select != 2)
-            {
-                this.Clear();
-
-                this.Controls.Add(CategoriePage);
-                select = 2;
-            }
-
-        }
-
-        public void Click_Like(object sender, EventArgs e)
-        {
-
-            if (select != 3)
-            {
-                this.Clear();
-                Panel panel = new Panel();
-                panel.BackColor = Color.FromArgb(255, 0, 0, 0);
-                panel.Width = 896;
-                panel.Height = 2;
-                panel.Location = new Point((this.Width) / 2 - (panel.Width) / 2, 160);
-                this.Controls.Add(panel);
-                int nb = 0;
-
-                
-                Label t = new Label();
-                t.AutoSize = true;
-                t.Text = "Vos Favories";
-                t.Font = t.Font = new System.Drawing.Font("Bahnschrift SemiBold", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                t.Location = new Point(this.Width / 2 - t.Width / 2 -50, 60);
-                this.Controls.Add(t);
-                foreach(DataRow r in dataset.Tables["UserRecette"].Select("codeUser="+idAccount))
-                {
-                    
-                    if (r["codeUser"].ToString() == idAccount.ToString())
-                    {
-                        DataRow row = dataset.Tables["Recettes"].Select("codeRecette = " + r["codeRecette"])[0];
-                        ucCarteEtoile carte = this.createCarteStars(row, 50 + (nb % 3) * 330, 200 + (nb / 3) * 100);
-                        carte.isLiked=true;
-                        this.Controls.Add(carte);
-                        
-                        carte.set_click_like(like_Click);
-                        
-                        nb++;
-                    }
-                }
-                select = -1;
-
-                if (dataset.Tables["UserRecette"].Select("codeUser="+idAccount).Length == 0)
-                {
-                    Label label = new Label();
-                    label.Size = new System.Drawing.Size(500, 42);
-                    label.Text = "Aucune recette ne correspond à votre recherche";
-                    label.Font = new System.Drawing.Font("Bahnschrift", 16, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
-                    label.Location = new Point((this.Width) / 2 - (label.Width) / 2, 300);
-                    label.TextAlign = ContentAlignment.MiddleCenter;
-                    this.Controls.Add(label);
-                    label.BringToFront();
-                }
-            }
-        }
-
-
-        List<Accueil.ucIngredient.Ingredient> liste_de_course = new List<Accueil.ucIngredient.Ingredient>();
-        public void add_Liste_Recette(object sender, EventArgs e)
-        {
-            List<Accueil.ucIngredient.Ingredient> lst = new List<ucIngredient.Ingredient>();
-            foreach (Accueil.ucIngredient.Ingredient @struct in ((FeuilleRecette)((Label)sender).Parent.Parent.Parent.Parent).ListeIng)
-            {
-                bool existe = false;
-                foreach (Accueil.ucIngredient.Ingredient element in liste_de_course)
-                {
-                    if (element.Name.Equals(@struct.Name))
-                    {
-                        existe = true;
-                        Accueil.ucIngredient.Ingredient ing = new ucIngredient.Ingredient();
-                        ing.Name = element.Name;
-                        ing.Quantiter = element.Quantiter + @struct.Quantiter;
-                        ing.uniter = element.uniter;
-                        lst.Add(ing);
-                        break;
-                    }
-                }
-                if (!existe)
-                {
-                    Accueil.ucIngredient.Ingredient ing = new ucIngredient.Ingredient();
-                    ing.Name = @struct.Name;
-                    ing.Quantiter = @struct.Quantiter;
-                    ing.uniter = @struct.uniter;
-                    lst.Add(ing);
-                }
-            }
-            liste_de_course.Clear();
-            foreach (Accueil.ucIngredient.Ingredient element in lst)
-            {
-                liste_de_course.Add(element);
-            }
-        }
+        //////Uniquement du design//////
         private void panel_Paint(object sender, PaintEventArgs e)
         {
             int radius = 10; // Rayon des bords ronds
@@ -1029,35 +1147,9 @@ namespace SAE_D21
             ((ucLogIn)sender).Region = new Region(path);
         }
 
-
-
-
-        public void StructToStr(Accueil.ucCategorie.Return @return)
-        {
-            rechercheSetting = "";
-            bool first = true;
-            if (@return.codeCatego.Count > 0)
-            {
-                foreach (int i in @return.codeCatego)
-                {
-                    if (first)
-                    {
-                        rechercheSetting += " AND (codeRecette IN (SELECT codeRecette FROM CatégoriesRecette WHERE codeCategorie = " + i + ") ";
-                        first = false;
-                    }
-                    else
-                    {
-                        rechercheSetting += " OR codeRecette IN (SELECT codeRecette FROM CatégoriesRecette WHERE codeCategorie = " + i + ") ";
-                    }
-                }
-                rechercheSetting += ")";
-            }
-            rechercheSetting += " AND categPrix <= " + @return.prix;
-            if (@return.temps != 0)
-            {
-                rechercheSetting += " AND tempsCuisson <= " + @return.temps;
-            }
-        }
     }
+    
+
+
 
 }
