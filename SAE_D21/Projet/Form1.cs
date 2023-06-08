@@ -22,10 +22,12 @@ namespace SAE_D21
         Panel menu = new Panel();
 
         ucBarre barre;
+        
         private void AppCuisine_Load(object sender, EventArgs e)
         {
             this.loadDataset();
-
+            
+            
             folderBrowserDialog.SelectedPath = "C:\\Users\\arnaudmichel\\source\\repos\\SAE_D21\\SAE_D21\\pdfRecettes";
 
             barre = new ucBarre();
@@ -50,7 +52,7 @@ namespace SAE_D21
             menu.BackColor = Color.FromArgb(255, 255, 255);
 
             this.loadmenu();
-            this.Controls.Add(menu);
+            draw_menu();
         }
 
         ucRechercheIngredient rechercheIng;
@@ -69,6 +71,9 @@ namespace SAE_D21
             Accueil.BarDeRecherche barDeRecherche1 = new Accueil.BarDeRecherche();
             barDeRecherche1.textBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.barDeRecherche1_KeyPress);
             barDeRecherche1.Location = new Point((this.Width - barDeRecherche1.Width) / 2 - 28, 87);
+
+            ucListe l= new ucListe();
+            menu.Controls.Add(l);
 
 
             //Dessin button filtre
@@ -98,7 +103,6 @@ namespace SAE_D21
 
             boutton_filtre2.Click += barre.Click_filtre;
             image_filtre.Click += barre.Click_filtre;
-
 
             menu.Controls.Add(boutton_filtre);
 
@@ -206,6 +210,11 @@ namespace SAE_D21
             Modifie_like_menu();
 
         }
+        public void draw_menu()
+        {
+            this.Controls.Add(menu);
+            ((ucListe)menu.Controls.OfType<ucListe>().ToArray()[0]).ControlAdd();
+        }
 
         // Connection string to database file
         string chcon = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=baseFrigov2023.mdb";
@@ -222,6 +231,7 @@ namespace SAE_D21
         //Connection 
         private void user_Click(object sender, EventArgs e)
         {
+            ((ucListe)menu.Controls.OfType<ucListe>().ToArray()[0]).ControlRemoved();
             PictureBox pictureBox = new PictureBox();
             pictureBox.Image = Image.FromFile("../../assets/bg.png");
             pictureBox.Size = new Size(1080, 720);
@@ -256,7 +266,7 @@ namespace SAE_D21
             }
             
             this.Controls.Remove(((PictureBox)sender).Parent);
-            
+            ((ucListe)menu.Controls.OfType<ucListe>().ToArray()[0]).ControlAdd();
 
         }
 
@@ -294,6 +304,7 @@ namespace SAE_D21
 
             }
         }
+
         private void setImageAccount()
         {
             if (idAccount > 0)
@@ -362,7 +373,7 @@ namespace SAE_D21
                     }
                 }
                 setImageAccount();
-                
+                ((ucListe)menu.Controls.OfType<ucListe>().ToArray()[0]).ControlAdd();
             }
         }
 
@@ -781,7 +792,7 @@ namespace SAE_D21
                     Bdr.Text = "Rechercher (ex: Pomme, banane...)";
                 }
 
-                this.Controls.Add(menu);
+                draw_menu();
                 Modifie_like_menu();
                 select = 1;
             }
@@ -1088,7 +1099,7 @@ namespace SAE_D21
             while (this.Controls.Count > 1)
             {
                 if (rechercheIng != null) { rechercheIng.clear_carouselle(); }
-
+                ((ucListe)menu.Controls.OfType<ucListe>().ToArray()[0]).ControlRemoved();
                 foreach (Control c in this.Controls)
                 {
 
@@ -1104,6 +1115,7 @@ namespace SAE_D21
         {
             while (this.Controls.Count > 2)
             {
+                ((ucListe)menu.Controls.OfType<ucListe>().ToArray()[0]).ControlRemoved();
                 foreach (Control c in this.Controls)
                 {
 
