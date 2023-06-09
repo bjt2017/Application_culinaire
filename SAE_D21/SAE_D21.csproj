@@ -58,7 +58,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Projet\code\BindingS.cs" />
     <Compile Include="Projet\code\pdfGenerator.cs" />
     <Compile Include="Projet\Form1.cs">
       <SubType>Form</SubType>

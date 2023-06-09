@@ -124,6 +124,30 @@
     <value>25</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAHYAAAB2AAAAAAAAAAAA
+        AAAAAAAAAAAAADeY/0o4l/61OJf+4DiX/u44l/7uOJf+7jiX/u44l/7uN5f+7jGV/uQpkv/JH43/ewAA
+        AAAAAAAAAAAAADiX/2U4l/7/OJf+/ziX/v84l/7/OJf+/ziX/v84l/7/OJf+/ziX/v84l/7/OJf+/yiR
+        //4bjP+gAAAAAAAAAAA3l/7YOJf+/0Ov/v89ov7/OJf+/ziX/v84l/7/OJf+/ziX/v84l/7/OJf+/ziX
+        /v84l/7/FYr+9AAAAABEROdAPHz3uzyA98BX2/34Trz84TyA98A8gPfAPID3wDyA98A8gPfAPID3wDyA
+        98A8gPfAPID3wCaA+tg5OeBsRETp80dR5f9ERen/WNX7/1e66/9IVuT/RETp/1B42/9Qdtv/RETp/0lX
+        5P9Vitb/SFPl/0RF6P9FXd//ODjd+kND6Z9p4b/8Z9jB+lvk9/9i59//a+a9/WfWwfps7Lv/bOy7/2bV
+        wfpq5r3+bOy7/2rkvf1o2cH6Q+Ss/jg43s4AAAAAZurSxWXq1dBa5Pz9Xubx7mbq0s1m6tHNZurRzWbq
+        0c1m6tHNZurRzWbq0c1m6tHNZurRzUjl0OUAAAAAKFifIESn1stFqdfSRanX0kWp19JFqdfSRanX0kWp
+        19JFqdfSRanX0kWp19JFqdfSRanX0kWp19I2pdTmI0+aOihVnukoVZ7/KFWe/yhVnv8oVZ7/KFWe/yhV
+        nv8oVZ7/KFWe/yhVnv8oVZ7/KFWe/yhVnv8oVZ7/KFWe/yVPlfcpVZ/JKFWe/yhVnv8oVZ7/KFWe/yhV
+        nv8oVZ7/KFWe/yhVnv8oVZ7/KFWe/yhVnv8oVZ7/KFWe/yhVnf8lUJXoOZf9ojiX/v84l/7/OJf+/ziX
+        /v84l/7/OJf+/ziX/v84l/7/OJf+/ziX/v84l/7/OJf+/ziX/v83l/7/GYv92DiW/ag4l/7/OJf+/ziX
+        /v84l/7/OJf+/ziX/v84l/7/OJf+/ziX/v84l/7/OJf+/ziX/v84l/7/LZP+/xeK/eE3lv8uOJf++ziX
+        /v84l/7/OJf+/ziX/v84l/7/OJf+/ziX/v84l/7/OJf+/ziX/v84l/7/N5f+/xWL/f4gj/9QAAAAADiY
+        /2g4l/7+OJf+/ziX/v8xkfn/N5b9/zWT+/80lPv/N5X9/zGR+f84l/7/N5f+/xuM/f8bjf+jAAAAAAAA
+        AAAAAAAAOJb/TjiX/uU4l/7/Npb9/zeW/f82lf3/Npb9/zeW/f82lv3/LZP+/xeK/fcdjf+EAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAktv8HMpX/YCyT/qwtk/7WK5L+6ieQ/u0ij/7hG43+zRyO/5AVlf8MAAAAAAAA
+        AAAAAAAAwAMAAIABAACAAQAAAAAAAAAAAAAAAAAAgAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAB
+        AADAAwAA4AcAAA==
+</value>
+  </data>
   <data name="errorProvider.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAMMOAADDDgAAAAAAAAAA

@@ -133,7 +133,7 @@ namespace SAE_D21
             }
             catch (Exception ex)
             {
-                throw ex;
+                
             }
             finally
             {
@@ -193,7 +193,7 @@ namespace SAE_D21
             }
             catch (Exception ex)
             {
-                throw ex;
+                
             }
         }
     }
