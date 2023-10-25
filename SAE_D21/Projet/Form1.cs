@@ -22,12 +22,12 @@ namespace SAE_D21
         Panel menu = new Panel();
 
         ucBarre barre;
-        
+
         private void AppCuisine_Load(object sender, EventArgs e)
         {
             this.loadDataset();
-            
-            
+
+
             folderBrowserDialog.SelectedPath = "C:\\Users\\arnaudmichel\\source\\repos\\SAE_D21\\SAE_D21\\pdfRecettes";
 
             barre = new ucBarre();
@@ -45,8 +45,8 @@ namespace SAE_D21
             button.Click += testClick;
             this.Controls.Add(button);*/
 
-            
-            
+
+
             menu.Size = new Size(1080, 720);
             menu.Location = new Point(0, 0);
             menu.BackColor = Color.FromArgb(255, 255, 255);
@@ -60,7 +60,7 @@ namespace SAE_D21
         String rechercheSetting = "";
 
 
-        
+
 
         private int idAccount = -1;
         Random rnd = new Random();
@@ -72,7 +72,7 @@ namespace SAE_D21
             barDeRecherche1.textBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.barDeRecherche1_KeyPress);
             barDeRecherche1.Location = new Point((this.Width - barDeRecherche1.Width) / 2 - 28, 87);
 
-            ucListe l= new ucListe(click_pdf_liste);
+            ucListe l = new ucListe(click_pdf_liste);
             menu.Controls.Add(l);
             l.setClick_Connecter(user_Click);
             l.modifier(liste_de_course);
@@ -111,7 +111,7 @@ namespace SAE_D21
             boutton_filtre.Controls.Add(boutton_filtre2);
             boutton_filtre2.Controls.Add(image_filtre);
 
-            
+
 
 
             Label Titre = new Label();
@@ -225,7 +225,7 @@ namespace SAE_D21
         //Connection 
         private void user_Click(object sender, EventArgs e)
         {
-            
+
             ((ucListe)menu.Controls.OfType<ucListe>().ToArray()[0]).ControlRemoved();
             PictureBox pictureBox = new PictureBox();
             pictureBox.Image = Image.FromFile("../../assets/bg.png");
@@ -234,7 +234,7 @@ namespace SAE_D21
             pictureBox.BringToFront();
             pictureBox.Tag = "bg";
             ucLogIn ucLogIn = new ucLogIn(dataset, con); //ucLogIn(dataset, con);
-            ucLogIn.Location = new Point(this.Width/2 - ucLogIn.Width/2, this.Height/2 - ucLogIn.Height/2);
+            ucLogIn.Location = new Point(this.Width / 2 - ucLogIn.Width / 2, this.Height / 2 - ucLogIn.Height / 2);
             this.Controls.Add(ucLogIn);
             ucLogIn.BringToFront();
             ucLogIn.Paint += ucLogin_Paint;
@@ -245,7 +245,7 @@ namespace SAE_D21
             p.Size = new Size(40, 40);
             p.Image = Image.FromFile("../../assets/buttonExit.png");
             p.SizeMode = PictureBoxSizeMode.StretchImage;
-            p.Location = new Point(this.Width - p.Width -35, 20);
+            p.Location = new Point(this.Width - p.Width - 35, 20);
             p.BackColor = Color.Transparent;
             pictureBox.Controls.Add(p);
             p.Click += Click_Exit;
@@ -253,14 +253,14 @@ namespace SAE_D21
         }
         private void Click_Exit(object sender, EventArgs e)
         {
-            
+
             foreach (ucLogIn l in this.Controls.OfType<ucLogIn>())
             {
                 l.ucLogIn_ControlRemoved();
                 this.Controls.Remove(l);
 
             }
-            
+
             this.Controls.Remove(((PictureBox)sender).Parent);
             ((ucListe)menu.Controls.OfType<ucListe>().ToArray()[0]).ControlAdd();
 
@@ -273,13 +273,13 @@ namespace SAE_D21
         {
             foreach (Control ctr in menu.Controls)
             {
-                
+
                 if (ctr is carteGrande)
                 {
                     if (dataset.Tables["UserRecette"].Select("codeUser=" + idAccount + " and codeRecette=" + ((carteGrande)ctr).drow["codeRecette"]).Count() >= 1)
                     {
                         ((carteGrande)ctr).isLiked = true;
-                        
+
                     }
                     else
                     {
@@ -305,9 +305,9 @@ namespace SAE_D21
         {
             if (idAccount > 0)
             {
-                
+
                 ((ucListe)menu.Controls.OfType<ucListe>().ToArray()[0]).Img = System.Drawing.Image.FromFile("../../assets/account/userCo.png");
-             
+
                 foreach (Control ctr in menu.Controls.OfType<Label>())
                 {
                     try
@@ -325,20 +325,20 @@ namespace SAE_D21
                 Modifie_like_menu();
 
                 ((ucListe)menu.Controls.OfType<ucListe>().ToArray()[0]).login.Text = dataset.Tables["Account"].Select("codeUser = " + idAccount)[0]["prenom"].ToString();
-                
+
             }
             else
             {
-                
-                    
-                 ((ucListe)menu.Controls.OfType<ucListe>().ToArray()[0]).Img = System.Drawing.Image.FromFile("../../assets/account/user.png");
-                    
-                
-                
+
+
+                ((ucListe)menu.Controls.OfType<ucListe>().ToArray()[0]).Img = System.Drawing.Image.FromFile("../../assets/account/user.png");
+
+
+
             }
         }
 
-        
+
 
         public void Click_SignUp(Object sender, EventArgs e)
         {
@@ -357,12 +357,13 @@ namespace SAE_D21
                 }
                 setImageAccount();
                 ((ucListe)menu.Controls.OfType<ucListe>().ToArray()[0]).ControlAdd();
-                foreach(Label label in menu.Controls.OfType<Label>())
+                foreach (Label label in menu.Controls.OfType<Label>())
                 {
-                    if (label.Tag!=null)
+                    if (label.Tag != null)
                     {
-                        if (label.Tag.ToString().Equals("Titre")){
-                            label.Text = "Bienvenue " + dataset.Tables["Account"].Select("codeUser=" + idAccount)[0]["prenom"] + " " + dataset.Tables["Account"].Select("codeUser=" + idAccount)[0]["nom"]+" !";
+                        if (label.Tag.ToString().Equals("Titre"))
+                        {
+                            label.Text = "Bienvenue " + dataset.Tables["Account"].Select("codeUser=" + idAccount)[0]["prenom"] + " " + dataset.Tables["Account"].Select("codeUser=" + idAccount)[0]["nom"] + " !";
                         }
                     }
                 }
@@ -385,7 +386,7 @@ namespace SAE_D21
                 GenerateurPDF pdf = new GenerateurPDF(folderBrowserDialog.SelectedPath + "\\Marecette.pdf");
                 pdf.Process(dataset.Tables["recettes"].Select("codeRecette=" + (((FeuilleRecette)((PictureBox)sender).Parent).dr["codeRecette"]).ToString())[0], dataset, liste_de_course);
             }
-            
+
         }
 
         // Load dataset
@@ -395,15 +396,15 @@ namespace SAE_D21
             {
                 con.ConnectionString = chcon;
             }
-            
+
             if (con.State != ConnectionState.Open)
 
             {
-                
+
                 con.Open();
             }
             dataset.Clear();
-            
+
             // Get all sheets
             DataTable dt = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new object[] { null, null, null, "Table" });
             // Get all data from sheets
@@ -447,7 +448,7 @@ namespace SAE_D21
         private ucCarteEtoile createCarteStars(DataRow dr, int x, int y)
         {
             // Create carte
-            ucCarteEtoile carte = new ucCarteEtoile(dr,dataset);
+            ucCarteEtoile carte = new ucCarteEtoile(dr, dataset);
             carte.Location = new Point(x, y);
             carte.setClick(carteGrande_Click);
             return carte;
@@ -542,8 +543,8 @@ namespace SAE_D21
                 this.Clear();
                 this.loadmenu();
             }
-            
-            
+
+
         }
 
 
@@ -708,6 +709,7 @@ namespace SAE_D21
                         lst.Add(ing);
                         break;
                     }
+                    
                 }
                 if (!existe)
                 {
@@ -716,6 +718,26 @@ namespace SAE_D21
                     ing.Quantiter = @struct.Quantiter;
                     ing.uniter = @struct.uniter;
                     lst.Add(ing);
+                }
+            }
+            foreach (Accueil.ucIngredient.Ingredient element in liste_de_course)
+            {
+                bool existe = false;
+                foreach (Accueil.ucIngredient.Ingredient @struct in ((FeuilleRecette)((Label)sender).Parent.Parent.Parent).ListeIng)
+                {
+                    if (element.Name.Equals(@struct.Name))
+                    {
+                        existe = true;
+                    }
+                }
+                if (!existe)
+                {
+                    Accueil.ucIngredient.Ingredient ing = new ucIngredient.Ingredient();
+                    ing.Name = element.Name;
+                    ing.Quantiter = element.Quantiter;
+                    ing.uniter = element.uniter;
+                    lst.Add(ing);
+                    
                 }
             }
             liste_de_course.Clear();
@@ -727,7 +749,7 @@ namespace SAE_D21
             liste_de_course = ((ucListe)menu.Controls.OfType<ucListe>().ToArray()[0]).modifier(liste_de_course);
 
         }
-        
+
 
 
         //Convertie un retour en requette
@@ -766,6 +788,7 @@ namespace SAE_D21
         private int select = 1;
         public void Click_Categorie(object sender, EventArgs e)
         {
+            loadDataset();
             if (CategoriePage == null)
             {
                 CategoriePage = new ucCategorie(dataset.Tables["Catégories"], Click_Recherche_Categorie);
@@ -784,6 +807,7 @@ namespace SAE_D21
         {
             if (select != 1)
             {
+                loadDataset();
                 this.Clear();
                 foreach (BarDeRecherche Bdr in menu.Controls.OfType<BarDeRecherche>())
                 {
@@ -803,6 +827,7 @@ namespace SAE_D21
 
             if (select != 3)
             {
+                loadDataset();
                 this.Clear();
                 Panel panel = new Panel();
                 panel.BackColor = Color.FromArgb(255, 0, 0, 0);
@@ -991,9 +1016,9 @@ namespace SAE_D21
                 }
             }
             bool like = false;
-            
-            
-            Accueil.FeuilleRecette f = new Accueil.FeuilleRecette(row, dataset, add_Liste_Recette,click_Commantaire, dataset.Tables["UserRecette"].Select("codeUser=" + idAccount + " and codeRecette=" + row["codeRecette"]).Length == 0,afficher_list,barre,click_pdf_recette);
+
+
+            Accueil.FeuilleRecette f = new Accueil.FeuilleRecette(row, dataset, add_Liste_Recette, click_Commantaire, dataset.Tables["UserRecette"].Select("codeUser=" + idAccount + " and codeRecette=" + row["codeRecette"]).Length == 0, afficher_list, barre, click_pdf_recette);
             f.Location = new Point(0, 0);
             this.Clear();
             this.Controls.Add(f);
@@ -1003,12 +1028,12 @@ namespace SAE_D21
 
         private void click_Commantaire(object sender, EventArgs e)
         {
-           save = this.Controls.OfType<FeuilleRecette>().ToArray()[0];
-           
-           FeuilleCommantaire fc = new FeuilleCommantaire(dataset, save.dr, retour, Entregister_Avis, idAccount);
+            save = this.Controls.OfType<FeuilleRecette>().ToArray()[0];
 
-           this.Clear();
-           this.Controls.Add(fc);
+            FeuilleCommantaire fc = new FeuilleCommantaire(dataset, save.dr, retour, Entregister_Avis, idAccount);
+
+            this.Clear();
+            this.Controls.Add(fc);
 
         }
 
@@ -1018,16 +1043,16 @@ namespace SAE_D21
             if (!((FeuilleCommantaire)((Label)sender).Parent.Parent).enregistrer)
             {
                 DateTime now = DateTime.Now;
-                
-                string r = "Insert into UserRecetteCommentaire Values(" + idAccount + ",'" + (((FeuilleCommantaire)((Label)sender).Parent.Parent).Values).note + "','" + (((FeuilleCommantaire)((Label)sender).Parent.Parent).Values).avis.Replace("'","''") + "', '" + now.ToString("dd/MM/yyyy 'à' HH'h'mm") +"','" + (((FeuilleCommantaire)((Label)sender).Parent.Parent).Values).codeRecette.ToString() + "')";
+
+                string r = "Insert into UserRecetteCommentaire Values(" + idAccount + ",'" + (((FeuilleCommantaire)((Label)sender).Parent.Parent).Values).note + "','" + (((FeuilleCommantaire)((Label)sender).Parent.Parent).Values).avis.Replace("'", "''") + "', '" + now.ToString("dd/MM/yyyy 'à' HH'h'mm") + "','" + (((FeuilleCommantaire)((Label)sender).Parent.Parent).Values).codeRecette.ToString() + "')";
                 con.Open();
 
 
 
-                
-            
 
-                
+
+
+
                 OleDbTransaction oleDbTransaction = con.BeginTransaction();
                 try
                 {
@@ -1044,8 +1069,8 @@ namespace SAE_D21
                     oleDbTransaction.Commit();
                     loadDataset();
 
-                    
-                    
+
+
                 }
                 catch (Exception ex)
                 {
@@ -1069,8 +1094,8 @@ namespace SAE_D21
         {
             this.Clear();
             this.Controls.Add(save);
-            
-            
+
+
         }
 
 
@@ -1078,9 +1103,9 @@ namespace SAE_D21
         {
             this.Clear();
             ((ucListe)menu.Controls.OfType<ucListe>().ToArray()[0]).Ouvrir();
-            this.draw_menu();   
+            this.draw_menu();
         }
-       
+
 
         //Changement de page vers page recherche ingredient
         public void Click_Recherche_Ingredient(object sender, EventArgs e)
@@ -1181,7 +1206,7 @@ namespace SAE_D21
         }
 
     }
-    
+
 
 
 
