@@ -1,7 +1,7 @@
 # Projet - Application culinaire
 
 ## Introduction
-- Projet réaliser dans le cadre d’un projet de l’iut
+- Projet réalisé dans le cadre d’un projet de l’iut
 - codé avec C#, Windows Form et .net
 - librairies utilisées : .net
 - L’application est connectée à une base de donnée (SQL) en local
@@ -17,27 +17,27 @@
 ## Visuel
 ### Page d'accueil
 
-![visuel1](./image/image 1.png)
+![visuel1](./image/image1.png)
 
 ### Page d'une recette
 
-![visuel1](./image/image 2.png)
+![visuel1](./image/image2.png)
 
 ### Selection des ingredients
 
-![visuel1](./image/image 4.png)
+![visuel1](./image/image4.png)
 
 ### Résultat
 
-![visuel1](./image/image 5.png)
+![visuel1](./image/image5.png)
 
 ### Connection a un compte
 
-![visuel1](./image/image 7.png)
+![visuel1](./image/image7.png)
 
 ### Section Favoris
 
-![visuel1](./image/image 6.png)
+![visuel1](./image/image6.png)
 
 ### Section commentaire
 
