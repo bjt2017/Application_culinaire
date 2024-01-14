@@ -17,30 +17,30 @@
 ## Visuel
 ### Page d'accueil
 
-![visuel1](image/image 1.png)
+![visuel1](./image/image 1.png)
 
 ### Page d'une recette
 
-![visuel1](image/image 2.png)
+![visuel1](./image/image 2.png)
 
 ### Selection des ingredients
 
-![visuel1](image/image 4.png)
+![visuel1](./image/image 4.png)
 
 ### Résultat
 
-![visuel1](image/image 5.png)
+![visuel1](./image/image 5.png)
 
 ### Connection a un compte
 
-![visuel1](image/image 7.png)
+![visuel1](./image/image 7.png)
 
 ### Section Favoris
 
-![visuel1](image/image 6.png)
+![visuel1](./image/image 6.png)
 
 ### Section commentaire
 
-![visuel1](image/image 3.png)
+![visuel1](./image/image 3.png)
 
 
